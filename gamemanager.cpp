@@ -54,6 +54,29 @@ QVariantList GameManager::games() const
     return list;
 }
 
+QVariantList GameManager::displayGames() const
+{
+    QVariantList list;
+
+    for (const auto &g : m_displayGames)
+    {
+        QVariantMap m;
+        m["name"] = g.name;
+        m["posterUrl"] = g.posterUrl;
+        m["dateAdded"] = g.dateAdded;
+        m["executablePath"] = g.executablePath;
+        m["dateAdded"] = g.dateAdded.toString("yyyy-MM-dd HH:mm");
+        m["lastPlayed"] = g.lastPlayed.isValid()
+                              ? g.lastPlayed.toString("yyyy-MM-dd HH:mm")
+                              : "Never";
+        m["playtimeMin"] = g.totalPlaytimeSec / 60;
+        list << m;
+    }
+
+    return list;
+
+}
+
 // Launch a game given index
 void GameManager::launchGame(int index)
 {
