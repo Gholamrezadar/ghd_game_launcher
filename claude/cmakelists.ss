@@ -20,15 +20,35 @@ qt_add_qml_module(appghd_game_launcher
     URI ghd_game_launcher
     QML_FILES
         Main.qml
-        SOURCES gamemanager.h gamemanager.cpp
-        SOURCES game.h
-        SOURCES gamesession.h gamesession.cpp
-        SOURCES sqliterepository.h sqliterepository.cpp
-        SOURCES gamerepository.h
-        RESOURCES resources.qrc
-        QML_FILES AddNewWindow.qml
-        # QML_FILES ui/components/GameCardDelegate.qml
+        components/IconToolButton.qml
+        components/SearchBar.qml
+        components/GameCardDelegate.qml
+        components/GameListDelegate.qml
+        AddNewWindow.qml
+    SOURCES 
+        gamemanager.h 
+        gamemanager.cpp
+        game.h
+        gamesession.h 
+        gamesession.cpp
+        sqliterepository.h 
+        sqliterepository.cpp
+        gamerepository.h
+    RESOURCES 
+        resources.qrc
 )
+
+# Add Theme singleton module separately
+qt_add_qml_module(theme_module
+    URI theme
+    QML_FILES
+        theme/Theme.qml
+    NO_PLUGIN
+    OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/theme
+)
+
+# Link the theme module to the main executable
+target_link_libraries(appghd_game_launcher PRIVATE theme_moduleplugin)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
@@ -42,10 +62,11 @@ set_target_properties(appghd_game_launcher PROPERTIES
 )
 
 target_link_libraries(appghd_game_launcher
-    PRIVATE Qt6::Quick Qt6::Sql
+    PRIVATE 
+        Qt6::Quick 
+        Qt6::Sql
+        Qt6::Core
 )
-target_link_libraries(appghd_game_launcher PRIVATE Qt6::Core)
-target_link_libraries(appghd_game_launcher PRIVATE Qt6::Core)
 
 include(GNUInstallDirs)
 install(TARGETS appghd_game_launcher
