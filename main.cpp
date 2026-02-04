@@ -22,6 +22,15 @@ int main(int argc, char *argv[])
     gameManager.addGame("Hades", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_hades.png");
     gameManager.addGame("Hollow Knight: Silksong", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_silksong.png");
     gameManager.addGame("Hollow Knight", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_hk.png");
+    gameManager.addGame("Hades 2", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_hades.png");
+    gameManager.addGame("Hollow Knight: Silksong 2", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_silksong.png");
+    gameManager.addGame("Hades 3", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_hades.png");
+    gameManager.addGame("Hollow Knight2", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_hk.png");
+    gameManager.addGame("Hollow Knight 3", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_hk.png");
+    gameManager.addGame("Hades 4", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_hades.png");
+    gameManager.addGame("Hollow Knight: Silksong 3", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_silksong.png");
+    gameManager.addGame("Hollow Knight 4", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_hk.png");
+    gameManager.addGame("Hollow Knight: Silksong 4", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_silksong.png");
     // TODO: need removeGame and updateGame
 
 

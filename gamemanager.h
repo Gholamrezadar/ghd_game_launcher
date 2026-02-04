@@ -27,7 +27,7 @@ public:
     explicit GameManager(GameRepository *repository, QObject *parent = nullptr);
 
     // UI accessible methods
-    Q_INVOKABLE void launchGame(int index);
+    Q_INVOKABLE void launchGame(const QString &name);
     Q_INVOKABLE void addGame(const QString &name, const QString &exePath, const QString &posterUrl);
     Q_INVOKABLE void removeGame(const QString &name, const QString &exePath, const QString &posterUrl);
     Q_INVOKABLE void updateGame(const QString &name, const QVariantMap& fields);

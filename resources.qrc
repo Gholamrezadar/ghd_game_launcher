@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/icon_list_view.svg</file>
+        <file>icons/icon_grid_view.svg</file>
+        <file>icons/icon_grid_view_outline.svg</file>
+        <file>icons/icon_add.svg</file>
+        <file>icons/icon_sort.svg</file>
+    </qresource>
+</RCC>

@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 project(ghd_game_launcher VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 find_package(Qt6 REQUIRED COMPONENTS Core)
@@ -23,6 +25,8 @@ qt_add_qml_module(appghd_game_launcher
         SOURCES gamesession.h gamesession.cpp
         SOURCES sqliterepository.h sqliterepository.cpp
         SOURCES gamerepository.h
+        RESOURCES resources.qrc
+        QML_FILES AddNewWindow.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

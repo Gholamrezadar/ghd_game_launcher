@@ -78,10 +78,21 @@ QVariantList GameManager::displayGames() const
 }
 
 // Launch a game given index
-void GameManager::launchGame(int index)
+void GameManager::launchGame(const QString &name)
 {
-    if (index < 0 || index >= m_games.size())
-        return;
+    int index = -1;
+    for(int i=0; i<m_games.length(); i++)
+    {
+        if(m_games[i].name == name) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        qWarning() << "Game " << name << "Doesn't Exist!";
+
+    }
 
     Game &game = m_games[index];
 
