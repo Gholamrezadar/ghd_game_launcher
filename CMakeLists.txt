@@ -27,6 +27,14 @@ target_include_directories(GHD_Launcher
     src/include
 )
 
+# Set Theme.qml as singleton
+set_source_files_properties(ui/theme/Theme.qml
+    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
+# Set Utils.qml as singleton
+set_source_files_properties(ui/utils/Utils.qml
+    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
 # Main Qml Module (add cpp sources and qml files and qrc files)
 qt_add_qml_module(GHD_Launcher
     # Module URI
@@ -47,21 +55,25 @@ qt_add_qml_module(GHD_Launcher
 
     # .QML
     QML_FILES
+        # Windows
         ui/windows/Main.qml
         ui/windows/Testing.qml
         ui/windows/AddNewWindow.qml
 
+        # Components
         ui/components/RoundedImage.qml
         # ui/components/GHDToolButton.qml
         # ui/components/GHDButton.qml
         # ui/components/SearchBar.qml
-        # ui/components/GridViewCard.qml
-        # ui/components/ListViewCard.qml
+        ui/components/GridViewCard.qml
+        ui/components/ListViewCard.qml
 
-        # ui/theme/Theme.qml
+        # Singletons
+        ui/theme/Theme.qml
+        ui/utils/Utils.qml
 
     # .QRC
-    QML_FILES
+    RESOURCES
         resources.qrc
 
 )

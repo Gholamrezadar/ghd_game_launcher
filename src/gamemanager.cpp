@@ -48,6 +48,7 @@ QVariantList GameManager::games() const
                               ? g.lastPlayed.toString("yyyy-MM-dd HH:mm")
                               : "Never";
         m["playtimeMin"] = g.totalPlaytimeSec / 60;
+        m["totalPlaytimeSec"] = g.totalPlaytimeSec;
         list << m;
     }
 
@@ -70,6 +71,7 @@ QVariantList GameManager::displayGames() const
                               ? g.lastPlayed.toString("yyyy-MM-dd HH:mm")
                               : "Never";
         m["playtimeMin"] = g.totalPlaytimeSec / 60;
+        m["totalPlaytimeSec"] = g.totalPlaytimeSec;
         list << m;
     }
 
