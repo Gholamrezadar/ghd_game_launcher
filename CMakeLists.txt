@@ -58,12 +58,12 @@ qt_add_qml_module(GHD_Launcher
         # Windows
         ui/windows/Main.qml
         ui/windows/Testing.qml
-        ui/windows/AddNewWindow.qml
+        ui/windows/AddGameWindow.qml
 
         # Components
         ui/components/RoundedImage.qml
-        # ui/components/GHDToolButton.qml
-        # ui/components/GHDButton.qml
+        ui/components/GHDToolButton.qml
+        ui/components/GHDButton.qml
         # ui/components/SearchBar.qml
         ui/components/GridViewCard.qml
         ui/components/ListViewCard.qml

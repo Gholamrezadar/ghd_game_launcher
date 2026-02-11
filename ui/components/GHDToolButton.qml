@@ -1,0 +1,58 @@
+import QtQuick 2.15
+import QtQuick.Controls.Universal
+ToolButton {
+    id: root
+
+    // Exposed properties
+    property alias iconSource: root.icon.source
+    property alias iconName: root.icon.name
+    property alias iconColor: root.icon.color
+    property alias iconWidth: root.icon.width
+    property alias iconHeight: root.icon.height
+
+    property color iconColorPressed: "#272727"
+    property color iconColorHovered: "#333"
+
+    // Default values
+    background: null
+    display: AbstractButton.IconOnly
+    icon.color: "#888"
+    icon.height: 18
+    icon.width: 18
+
+    HoverHandler {
+        id: hoverHandler
+        cursorShape: "PointingHandCursor"
+    }
+
+    TapHandler {
+        id: tapHandler
+    }
+
+    Rectangle {
+        id: backgroundRect
+        color: "transparent"
+        anchors.fill: parent
+        anchors.margins: 1
+        radius: 1000
+
+        states: [
+            State {
+                name: "pressed"
+                when: tapHandler.pressed
+                PropertyChanges {
+                    target: backgroundRect
+                    color: iconColorPressed
+                }
+            },
+            State {
+                name: "hovered"
+                when: hoverHandler.hovered && !tapHandler.pressed
+                PropertyChanges {
+                    target: backgroundRect
+                    color: iconColorHovered
+                }
+            }
+        ]
+    }
+}

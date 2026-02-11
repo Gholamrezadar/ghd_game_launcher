@@ -10,43 +10,64 @@ ApplicationWindow {
     minimumWidth: 620 + 16
     visible: true
     title: "GHD Launcher"
-    // color: "#444"
 
+    // color: "#444"
     Universal.theme: Universal.Dark
 
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
 
-        // Control Bar (Search + Filter)
+        // Full width top container containing the search bar and other stuff in the header
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 120
             z: 100
             color: "transparent"
+            // black to transparent gradient
             gradient: Gradient {
                 GradientStop {
                     position: 0.0
                     color: "#000"
                 }
-                // GradientStop {
-                //     position: 0.1
-                //     color: "#000"
-                // }
                 GradientStop {
                     position: 1.0
                     color: Qt.rgba(0, 0, 0, 0)
-                } // transparent black
+                }
             }
 
             // Black container around the search bar
             Rectangle {
+                id: searchBarId
                 color: "#222"
                 anchors.centerIn: parent
                 width: 600
-                height: content.implicitHeight + 8
+                height: content.implicitHeight + 16
                 radius: 1000
+                border.color: searchTextFieldId.focus? "#333" : "#222"
+                border.width: 1.5
 
+                Keys.onEscapePressed: {
+                    searchTextFieldId.focus = false
+                }
+
+                Behavior on border.color {
+                    ColorAnimation {
+                        duration: 200
+                        easing.type: Easing.OutQuad
+                    }
+                }
+
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: true
+                    shadowHorizontalOffset: 0
+                    shadowVerticalOffset: 2
+                    shadowBlur: 1.4
+                    shadowColor: "black"
+                }
+
+                // Container containing the search bar and tool buttons (add, sort, list/grid view)
                 RowLayout {
                     id: content
                     anchors.fill: parent
@@ -55,6 +76,7 @@ ApplicationWindow {
                     spacing: 0
 
                     TextField {
+                        id: searchTextFieldId
                         placeholderText: "Search ..."
                         Layout.fillHeight: true
                         Layout.fillWidth: true // fillWidth -> take the remaining space horizontally
@@ -66,189 +88,70 @@ ApplicationWindow {
                     }
 
                     // Add Button
-                    ToolButton {
-                        // Layout.fillHeight: true // no fillWidth -> width: implicitWidth
-                        checked: true
-                        icon.name: "list"
-                        icon.source: "qrc:/icons/icon_add.svg"
-                        icon.color: "#888"
-                        background: null
-                        display: AbstractButton.IconOnly
-                        checkable: true
-                        icon.height:18
-                        icon.width:18
-
-                        onCheckedChanged: {
-                            var component = Qt.createComponent("AddNewWindow.qml");
+                    GHDToolButton {
+                        iconName: "add"
+                        iconSource: "qrc:/icons/icon_add.svg"
+                        iconColor: "#888"
+                        iconColorPressed: "#272727"
+                        iconColorHovered: "#333"
+                        onClicked: {
+                            var component = Qt.createComponent(
+                                        "AddGameWindow.qml")
                             if (component.status === Component.Ready) {
                                 var win = component.createObject(null, {
-                                    "visible": true
-                                });
-                                win.show();
+                                                                     "visible": true
+                                                                 })
+                                win.show()
                             }
-                        }
-
-                        HoverHandler {
-                            id: addHoverHandlerId
-                            cursorShape: "PointingHandCursor"
-                        }
-
-                        TapHandler {
-                            id: addTapHandlerId
-                        }
-
-                        // Circle around the button
-                        Rectangle {
-                            id: addRectId
-                            color: "transparent"
-                            anchors.fill: parent
-                            anchors.margins: 1
-                            radius: 1000
-
-                            states: [
-                                State {
-                                    name: "pressed"
-                                    when: addTapHandlerId.pressed
-                                    PropertyChanges {
-                                        target: addRectId
-                                        color: "#272727"
-                                    }
-                                },
-                                State {
-                                    name: "hovered"
-                                    when: addHoverHandlerId.hovered && !addTapHandlerId.pressed
-                                    PropertyChanges {
-                                        target: addRectId
-                                        color: "#333"
-                                    }
-                                }
-                            ]
                         }
                     }
 
                     // Sort Button
-                    ToolButton {
-                        // Layout.fillHeight: true // no fillWidth -> width: implicitWidth
-                        checked: true
-                        icon.name: "list"
-                        icon.source: "qrc:/icons/icon_sort.svg"
-                        icon.color: "#888"
-                        background: null
-                        display: AbstractButton.IconOnly
+                    GHDToolButton {
+                        iconName: "sort"
+                        iconSource: "qrc:/icons/icon_sort.svg"
+                        iconColor: "#888"
+                        iconColorPressed: "#272727"
+                        iconColorHovered: "#333"
                         checkable: true
-                        icon.height:18
-                        icon.width:18
-
-                        onCheckedChanged: gameManager.setAscending(checked)
-
-                        HoverHandler {
-                            id: sortHoverHandlerId
-                            cursorShape: "PointingHandCursor"
-                        }
-
-                        TapHandler {
-                            id: sortTapHandlerId
-                        }
-
-                        Rectangle {
-                            id: sortRectId
-                            color: "transparent"
-                            anchors.fill: parent
-                            anchors.margins: 1
-                            radius: 1000
-
-                            states: [
-                                State {
-                                    name: "pressed"
-                                    when: sortTapHandlerId.pressed
-                                    PropertyChanges {
-                                        target: sortRectId
-                                        color: "#272727"
-                                    }
-                                },
-                                State {
-                                    name: "hovered"
-                                    when: sortHoverHandlerId.hovered && !sortTapHandlerId.pressed
-                                    PropertyChanges {
-                                        target: sortRectId
-                                        color: "#333"
-                                    }
-                                }
-                            ]
+                        checked: true // true because our cpp code is set to ascending by default
+                        onCheckedChanged: {
+                            gameManager.setAscending(checked)
                         }
                     }
 
                     // Grid/List View Button
-                    ToolButton {
-                        // Layout.fillHeight: true // no fillWidth -> width: implicitWidth
-                        icon.name: "list"
-                        icon.source: viewLoader.sourceComponent === gridViewComponent ? "qrc:/icons/icon_list_view.svg" : "qrc:/icons/icon_grid_view_outline.svg"
-                        icon.color: "#888"
-                        background: null
-                        display: AbstractButton.IconOnly
-                        icon.height:18
-                        icon.width:18
+                    GHDToolButton {
+                        iconName: "list"
+                        iconSource: viewLoader.sourceComponent === gridViewComponent ? "qrc:/icons/icon_list_view.svg" : "qrc:/icons/icon_grid_view_outline.svg"
+                        iconColor: "#888"
+                        iconColorPressed: "#272727"
+                        iconColorHovered: "#333"
 
                         onClicked: {
-                            viewLoader.sourceComponent = (viewLoader.sourceComponent === gridViewComponent) ? listViewComponent : gridViewComponent;
-                        }
-
-                        HoverHandler {
-                            id: viewHoverHandlerId
-                            cursorShape: "PointingHandCursor"
-                        }
-
-                        TapHandler {
-                            id: viewTapHandlerId
-                        }
-
-                        Rectangle {
-                            id: viewRectId
-                            color: "transparent"
-                            anchors.fill: parent
-                            anchors.margins: 1
-                            radius: 1000
-
-                            states: [
-                                State {
-                                    name: "pressed"
-                                    when: viewTapHandlerId.pressed
-                                    PropertyChanges {
-                                        target: viewRectId
-                                        color: "#272727"
-                                    }
-                                },
-                                State {
-                                    name: "hovered"
-                                    when: viewHoverHandlerId.hovered && !viewTapHandlerId.pressed
-                                    PropertyChanges {
-                                        target: viewRectId
-                                        color: "#333"
-                                    }
-                                }
-                            ]
+                            viewLoader.sourceComponent = (viewLoader.sourceComponent === gridViewComponent) ? listViewComponent : gridViewComponent
                         }
                     }
                 }
             }
         }
 
-        // Card Grid/List wrapper
+        // Wrapper around GridView/ListView Loader
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredHeight: 1
             color: "transparent"
 
-            // Switch between Grid View and List View
+            // Switch between GridView and ListView
             Loader {
                 id: viewLoader
-                sourceComponent: gridViewComponent
+                sourceComponent: gridViewComponent // GridView by default
                 anchors.fill: parent
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            // Grid View Component
+            // 1. Grid View Component
             Component {
                 id: gridViewComponent
 
@@ -258,17 +161,18 @@ ApplicationWindow {
                     boundsBehavior: Flickable.StopAtBounds
                     cellWidth: 200
                     cellHeight: 300
-                    displayMarginBeginning: 500  // Paint delegates before visible area
-                    displayMarginEnd: 100  // Paint delegates after visible area
+                    displayMarginBeginning: 500 // Paint delegates before visible area
+                    displayMarginEnd: 100 // Paint delegates after visible area
 
                     // clip: true
-
                     model: gameManager.displayGames
 
                     // center children horizontally
                     property int columns: Math.floor(width / cellWidth)
                     property real rowWidth: columns * cellWidth
-                    property real horizontalPadding: Math.max(0, (width - rowWidth) / 2)
+                    property real horizontalPadding: Math.max(
+                                                         0,
+                                                         (width - rowWidth) / 2)
                     Binding {
                         target: gridId
                         property: "contentX"
@@ -284,7 +188,7 @@ ApplicationWindow {
                 }
             }
 
-            // List View Component (not loaded by default)
+            // 2. List View Component
             Component {
                 id: listViewComponent
 
@@ -292,7 +196,10 @@ ApplicationWindow {
                 ListView {
                     boundsBehavior: Flickable.StopAtBounds
                     model: gameManager.displayGames
-                    clip: true
+                    // clip: true
+                    displayMarginBeginning: 500 // Paint delegates before visible area
+                    displayMarginEnd: 100 // Paint delegates after visible area
+
 
                     // List View Delegate
                     delegate: ListViewCard {}
@@ -300,7 +207,7 @@ ApplicationWindow {
             }
 
             // This item preloads the ListViewComponent for faster first time switch
-            // Note: Slower Load time and more memory usage
+            // Note: Slower Load time and more memory usage but snappier first time switch to ListView
             // Item {
             //     id: listViewComponentPreload
             //     visible: false

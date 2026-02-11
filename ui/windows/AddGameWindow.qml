@@ -1,9 +1,9 @@
-// main.qml
-import QtQuick 6.5
-import QtQuick.Window 6.5
-import QtQuick.Controls 6.5
-import QtQuick.Layouts 6.5
-import QtQuick.Dialogs 6.5
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Dialogs
+import "../components"
 
 ApplicationWindow {
     id: window
@@ -57,7 +57,11 @@ ApplicationWindow {
             }
 
             // Submit Button
-            Button {
+            GHDButton {
+                backgroundColor: "#3498db"
+                backgroundColorHovered: "#2980b9"
+                backgroundColorPressed: "#21618c"
+                textColor: "#ffffff"
                 text: "Submit"
                 Layout.alignment: Qt.AlignHCenter
                 onClicked: {
