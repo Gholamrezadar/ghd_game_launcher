@@ -24,20 +24,20 @@ ApplicationWindow {
             Layout.preferredHeight: 120
             z: 100
             color: "transparent"
-            // gradient: Gradient {
-            //     GradientStop {
-            //         position: 0.0
-            //         color: "#444"
-            //     }
-            //     GradientStop {
-            //         position: 0.7
-            //         color: "#444"
-            //     }
-            //     GradientStop {
-            //         position: 1.0
-            //         color: Qt.rgba(0, 0, 0, 0)
-            //     } // transparent black
-            // }
+            gradient: Gradient {
+                GradientStop {
+                    position: 0.0
+                    color: "#000"
+                }
+                // GradientStop {
+                //     position: 0.1
+                //     color: "#000"
+                // }
+                GradientStop {
+                    position: 1.0
+                    color: Qt.rgba(0, 0, 0, 0)
+                } // transparent black
+            }
 
             // Black container around the search bar
             Rectangle {
@@ -258,7 +258,10 @@ ApplicationWindow {
                     boundsBehavior: Flickable.StopAtBounds
                     cellWidth: 200
                     cellHeight: 300
-                    clip: true
+                    displayMarginBeginning: 500  // Paint delegates before visible area
+                    displayMarginEnd: 100  // Paint delegates after visible area
+
+                    // clip: true
 
                     model: gameManager.displayGames
 
@@ -266,7 +269,15 @@ ApplicationWindow {
                     property int columns: Math.floor(width / cellWidth)
                     property real rowWidth: columns * cellWidth
                     property real horizontalPadding: Math.max(0, (width - rowWidth) / 2)
-                    contentX: -horizontalPadding
+                    Binding {
+                        target: gridId
+                        property: "contentX"
+                        value: -gridId.horizontalPadding
+                        when: gridId.horizontalPadding !== undefined
+                    }
+                    Component.onCompleted: {
+                        gridId.contentX = -gridId.horizontalPadding
+                    }
 
                     // Grid Cell
                     delegate: GridViewCard {}
@@ -290,11 +301,11 @@ ApplicationWindow {
 
             // This item preloads the ListViewComponent for faster first time switch
             // Note: Slower Load time and more memory usage
-            Item {
-                id: listViewComponentPreload
-                visible: false
-                property Item preloadedListViewComponent: listViewComponent.createObject(listViewComponentPreload)
-            }
+            // Item {
+            //     id: listViewComponentPreload
+            //     visible: false
+            //     property Item preloadedListViewComponent: listViewComponent.createObject(listViewComponentPreload)
+            // }
         }
     }
 }
