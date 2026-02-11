@@ -30,10 +30,17 @@ ApplicationWindow {
                     text: "Name:"
                     Layout.alignment: Qt.AlignVCenter
                 }
-                TextField {
+                GHDTextField {
                     id: nameInput
                     Layout.fillWidth: true
                     placeholderText: "Enter your name"
+                    backgroundColor: "#2c2c2c"
+                    backgroundColorFocused: "#333333"
+                    textColor: "#ffffff"
+                    placeholderColor: "#888888"
+                    borderColor: "#444444"
+                    borderColorFocused: "#3498db"
+                    radius: 6
                 }
             }
 
@@ -44,13 +51,25 @@ ApplicationWindow {
                     text: "File:    "
                     Layout.alignment: Qt.AlignVCenter
                 }
-                TextField {
+                GHDTextField {
                     id: fileInput
                     Layout.fillWidth: true
-                    placeholderText: "Select a file"
+                    placeholderText: "Select a file..."
+                    backgroundColor: "#2c2c2c"
+                    backgroundColorFocused: "#333333"
+                    textColor: "#ffffff"
+                    placeholderColor: "#888888"
+                    borderColor: "#444444"
+                    borderColorFocused: "#3498db"
+                    radius: 6
                     readOnly: true
                 }
-                Button {
+                
+                GHDButton {
+                    backgroundColor: '#34db87'
+                    backgroundColorHovered: '#29b96a'
+                    backgroundColorPressed: '#218c41'
+                    textColor: "#ffffff"
                     text: "Browse"
                     onClicked: fileDialog.open()
                 }

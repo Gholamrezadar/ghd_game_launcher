@@ -1,4 +1,3 @@
-// GHDButton.qml
 import QtQuick 2.15
 import QtQuick.Controls.Universal
 import QtQuick.Effects
