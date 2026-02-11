@@ -1,8 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import "components"
-import "theme"
+import "ui/components"
+import "ui/theme"
 
 ApplicationWindow {
     id: mainWindow
@@ -51,7 +51,7 @@ ApplicationWindow {
                 id: searchBar
                 anchors.centerIn: parent
                 
-                onSearchTextChanged: function(text) {
+                onMySearchTextChanged: function(text) {
                     mainWindow.filterText = text
                     nameProxyModel.filterText = text
                 }

@@ -12,7 +12,7 @@ ToolButton {
     
     // Signals
     signal buttonClicked()
-    signal checkedChanged(bool checked)
+    signal myCheckedChanged(bool checked)
     
     // ToolButton properties
     icon.source: iconSource
@@ -25,7 +25,7 @@ ToolButton {
     checked: isChecked
     
     onClicked: buttonClicked()
-    onCheckedChanged: root.checkedChanged(checked)
+    onCheckedChanged: root.myCheckedChanged(checked)
     
     HoverHandler {
         id: hoverHandler

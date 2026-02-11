@@ -11,7 +11,7 @@ Rectangle {
     property string placeholderText: "Search ..."
     
     // Signals
-    signal searchTextChanged(string text)
+    signal mySearchTextChanged(string text)
     signal addClicked()
     signal sortToggled(bool ascending)
     signal viewToggled(bool isGridView)
@@ -45,7 +45,7 @@ Rectangle {
             color: Theme.textPrimary
             placeholderTextColor: Theme.textMuted
             
-            onTextChanged: root.searchTextChanged(text)
+            onTextChanged: root.mySearchTextChanged(text)
         }
         
         // Add Button
@@ -64,7 +64,7 @@ Rectangle {
             isCheckable: true
             isChecked: root.sortAscending
             
-            onCheckedChanged: {
+            onMyCheckedChanged: {
                 root.sortAscending = checked
                 root.sortToggled(checked)
             }

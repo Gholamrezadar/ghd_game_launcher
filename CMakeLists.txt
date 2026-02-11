@@ -26,8 +26,14 @@ qt_add_qml_module(appghd_game_launcher
         SOURCES sqliterepository.h sqliterepository.cpp
         SOURCES gamerepository.h
         RESOURCES resources.qrc
-        QML_FILES AddNewWindow.qml
+        QML_FILES RoundedImage.qml
+        QML_FILES Testing.qml
+        # QML_FILES AddNewWindow.qml
         # QML_FILES ui/components/GameCardDelegate.qml
+        # QML_FILES ui/components/GameListDelegate.qml
+        # QML_FILES ui/components/IconToolButton.qml
+        # QML_FILES ui/components/SearchBar.qml
+        # QML_FILES ui/theme/Theme.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

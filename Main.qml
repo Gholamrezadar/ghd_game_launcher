@@ -1,7 +1,8 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick.Controls.Universal
 import QtQuick.Layouts 1.15
 import QtQuick.Effects
+
 
 ApplicationWindow {
     width: 1000
@@ -9,7 +10,9 @@ ApplicationWindow {
     minimumWidth: 620 + 16
     visible: true
     title: "Filter + Sort Grid"
-    color: "#444"
+    // color: "#444"
+
+    Universal.theme: Universal.Dark
 
     ColumnLayout {
         anchors.fill: parent
@@ -20,21 +23,21 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.preferredHeight: 120
             z: 100
-            color: "#444"
-            gradient: Gradient {
-                GradientStop {
-                    position: 0.0
-                    color: "#444"
-                }
-                GradientStop {
-                    position: 0.7
-                    color: "#444"
-                }
-                GradientStop {
-                    position: 1.0
-                    color: Qt.rgba(0, 0, 0, 0)
-                } // transparent black
-            }
+            color: "transparent"
+            // gradient: Gradient {
+            //     GradientStop {
+            //         position: 0.0
+            //         color: "#444"
+            //     }
+            //     GradientStop {
+            //         position: 0.7
+            //         color: "#444"
+            //     }
+            //     GradientStop {
+            //         position: 1.0
+            //         color: Qt.rgba(0, 0, 0, 0)
+            //     } // transparent black
+            // }
 
             // Black container around the search bar
             Rectangle {
@@ -56,8 +59,10 @@ ApplicationWindow {
                         Layout.fillHeight: true
                         Layout.fillWidth: true // fillWidth -> take the remaining space horizontally
                         background: null
+                        color: "white"
+                        placeholderTextColor: "gray"
 
-                        onTextChanged: nameProxyModel.filterText = text
+                        onTextChanged: gameManager.setFilterText(text)
                     }
 
                     // Add Button
@@ -253,6 +258,7 @@ ApplicationWindow {
                     boundsBehavior: Flickable.StopAtBounds
                     cellWidth: 200
                     cellHeight: 300
+                    clip: true
 
                     model: gameManager.displayGames
 
@@ -279,6 +285,7 @@ ApplicationWindow {
 
                     // Grid Cell
                     delegate: Rectangle {
+
                         width: gridId.cellWidth
                         height: gridId.cellHeight
                         color: "transparent"
@@ -366,12 +373,13 @@ ApplicationWindow {
                             ]
 
                             // Full screen poster/image (always visible)
-                            Image {
+                            RoundedImage {
                                 id: posterImage
                                 anchors.fill: parent
                                 source: "file:///" + modelData.posterUrl || ""
                                 fillMode: Image.PreserveAspectCrop
                                 visible: modelData.posterUrl !== ""
+                                radius: 8
                             }
 
                             // Fallback background when no poster
@@ -423,7 +431,7 @@ ApplicationWindow {
                                 // Playtime and date added (smaller font)
                                 Text {
                                     width: parent.width
-                                    text: modelData.playtimeMin + " Minutes  |  Added " + Qt.formatDate(modelData.dateAdded, "M/d/yyyy")
+                                    text: modelData.playtimeMin + " Minutes  |  Played " + Qt.formatDate(modelData.lastPlayed, "M/d/yyyy")
                                     font.pixelSize: 11
                                     color: "#ccc"
                                     elide: Text.ElideRight
@@ -439,10 +447,12 @@ ApplicationWindow {
                                 onExited: card.state = "default"
                                 onPressed: card.state = "pressed"
                                 onReleased: card.state = containsMouse ? "hovered" : "default"
+                                cursorShape: "PointingHandCursor"
 
                                 onClicked: {
                                     // Handle card click - launch game, show details, etc.
                                     console.log("Clicked:", modelData.name);
+                                    gameManager.launchGame(modelData.name);
                                 }
                             }
                         }
@@ -458,6 +468,7 @@ ApplicationWindow {
                 ListView {
                     boundsBehavior: Flickable.StopAtBounds
                     model: gameManager.displayGames
+                    clip: true
 
                     // List View Delegate
                     delegate: Rectangle {
@@ -511,11 +522,12 @@ ApplicationWindow {
                                     color: "#1a1a1a"
                                     clip: true
 
-                                    Image {
+                                    RoundedImage {
                                         anchors.fill: parent
                                         source: modelData.posterUrl ? "file:///" + modelData.posterUrl : ""
                                         fillMode: Image.PreserveAspectCrop
                                         visible: modelData.posterUrl !== ""
+                                        radius: 6
                                     }
 
                                     // Fallback

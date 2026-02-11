@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Effects
 import "../theme"
 
 Rectangle {
@@ -174,10 +175,10 @@ Rectangle {
             }
             
             // Spacer
-            Item {
-                width: 1
-                Layout.fillWidth: true
-            }
+            // Item {
+            //     width: 1
+            //     Layout.fillWidth: true
+            // }
             
             // Launch button
             Rectangle {

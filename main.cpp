@@ -1,15 +1,24 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QSurfaceFormat>
 
 #include "gamemanager.h"
 #include "sqliterepository.h"
 
 int main(int argc, char *argv[])
 {
+    QSurfaceFormat fmt;
+    fmt.setSamples(16);              // 4, 8, or 16
+    QSurfaceFormat::setDefaultFormat(fmt);
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    // Register GameManager as a QML type
+    qmlRegisterType<GameManager>("ghd_game_launcher", 1, 0, "GameManager");
+    qmlRegisterType<Game>("ghd_game_launcher", 1, 0, "Game");
 
     // Create the GameRepository (Sqlite Implementation)
     SQLiteRepository repo("games.db");
@@ -33,8 +42,8 @@ int main(int argc, char *argv[])
     gameManager.addGame("Hollow Knight: Silksong 4", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_silksong.png");
     // TODO: need removeGame and updateGame
 
-
     engine.loadFromModule("ghd_game_launcher", "Main");
+    // engine.loadFromModule("ghd_game_launcher", "Testing");
 
     if (engine.rootObjects().isEmpty())
         return -1;
