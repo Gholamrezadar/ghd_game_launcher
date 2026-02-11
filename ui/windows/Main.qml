@@ -9,7 +9,7 @@ ApplicationWindow {
     height: 700
     minimumWidth: 620 + 16
     visible: true
-    title: "Filter + Sort Grid"
+    title: "GHD Launcher"
     // color: "#444"
 
     Universal.theme: Universal.Dark

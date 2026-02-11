@@ -12,49 +12,70 @@ find_package(Qt6 REQUIRED COMPONENTS Sql)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
-qt_add_executable(appghd_game_launcher
-    main.cpp
+# Icon setup
+set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/icons/favicon.rc")
+
+# Main Executable setup
+qt_add_executable(GHD_Launcher
+    src/main.cpp
+    ${app_icon_resource_windows}
 )
 
-qt_add_qml_module(appghd_game_launcher
+target_include_directories(GHD_Launcher
+    PRIVATE
+    src/include
+)
+
+qt_add_qml_module(GHD_Launcher
     URI ghd_game_launcher
+    SOURCES
+        src/main.cpp
+        src/gamemanager.cpp
+        src/gamesession.cpp
+        src/sqliterepository.cpp
+
+        src/include/game.h
+        src/include/gamemanager.h
+        src/include/gamerepository.h
+        src/include/gamesession.h
+        src/include/sqliterepository.h
+
     QML_FILES
-        Main.qml
-        SOURCES gamemanager.h gamemanager.cpp
-        SOURCES game.h
-        SOURCES gamesession.h gamesession.cpp
-        SOURCES sqliterepository.h sqliterepository.cpp
-        SOURCES gamerepository.h
-        RESOURCES resources.qrc
-        QML_FILES RoundedImage.qml
-        QML_FILES Testing.qml
-        # QML_FILES AddNewWindow.qml
-        # QML_FILES ui/components/GameCardDelegate.qml
-        # QML_FILES ui/components/GameListDelegate.qml
-        # QML_FILES ui/components/IconToolButton.qml
-        # QML_FILES ui/components/SearchBar.qml
-        # QML_FILES ui/theme/Theme.qml
+        ui/windows/Main.qml
+        ui/windows/Testing.qml
+        ui/windows/AddNewWindow.qml
+
+        ui/components/RoundedImage.qml
+        # ui/components/GHDToolButton.qml
+        # ui/components/GHDButton.qml
+        # ui/components/SearchBar.qml
+        # ui/components/GridViewCard.qml
+        # ui/components/ListViewCard.qml
+
+        # ui/theme/Theme.qml
+    QML_FILES
+        resources.qrc
+
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
-set_target_properties(appghd_game_launcher PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.appghd_game_launcher
+set_target_properties(GHD_Launcher PROPERTIES
+#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.GHD_Launcher
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_libraries(appghd_game_launcher
+target_link_libraries(GHD_Launcher
     PRIVATE Qt6::Quick Qt6::Sql
 )
-target_link_libraries(appghd_game_launcher PRIVATE Qt6::Core)
-target_link_libraries(appghd_game_launcher PRIVATE Qt6::Core)
+target_link_libraries(GHD_Launcher PRIVATE Qt6::Core)
 
 include(GNUInstallDirs)
-install(TARGETS appghd_game_launcher
+install(TARGETS GHD_Launcher
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
