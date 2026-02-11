@@ -21,13 +21,18 @@ qt_add_executable(GHD_Launcher
     ${app_icon_resource_windows}
 )
 
+# Include dirs
 target_include_directories(GHD_Launcher
     PRIVATE
     src/include
 )
 
+# Main Qml Module (add cpp sources and qml files and qrc files)
 qt_add_qml_module(GHD_Launcher
+    # Module URI
     URI ghd_game_launcher
+
+    # .CPP
     SOURCES
         src/main.cpp
         src/gamemanager.cpp
@@ -40,6 +45,7 @@ qt_add_qml_module(GHD_Launcher
         src/include/gamesession.h
         src/include/sqliterepository.h
 
+    # .QML
     QML_FILES
         ui/windows/Main.qml
         ui/windows/Testing.qml
@@ -53,30 +59,26 @@ qt_add_qml_module(GHD_Launcher
         # ui/components/ListViewCard.qml
 
         # ui/theme/Theme.qml
+
+    # .QRC
     QML_FILES
         resources.qrc
 
 )
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
+# Win32 application (GUI) instead of a console app
 set_target_properties(GHD_Launcher PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.GHD_Launcher
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
 
+# Link against dependencies
 target_link_libraries(GHD_Launcher
-    PRIVATE Qt6::Quick Qt6::Sql
+    PRIVATE Qt6::Quick Qt6::Sql Qt6::Core
 )
-target_link_libraries(GHD_Launcher PRIVATE Qt6::Core)
 
+# Define default install dir for bin and lib files (cross-platform)
 include(GNUInstallDirs)
 install(TARGETS GHD_Launcher
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
