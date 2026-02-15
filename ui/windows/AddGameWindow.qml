@@ -14,7 +14,7 @@ ApplicationWindow {
 
     // Bg
     Rectangle {
-        color: "#444"
+        color: Theme.backgroundColor
         anchors.fill: parent
 
         // Form Layout

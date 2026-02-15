@@ -2,35 +2,39 @@ import QtQuick 2.15
 import QtQuick.Controls.Universal
 import QtQuick.Layouts 1.15
 import QtQuick.Effects
+import "../theme"
 
 // Full width top container containing the search bar and other stuff in the header
 Rectangle {
     Layout.fillWidth: true
-    Layout.preferredHeight: 120
+    Layout.preferredHeight: Theme.searchBarBackHeight
     z: 100
     color: "transparent"
     // black to transparent gradient
     gradient: Gradient {
         GradientStop {
             position: 0.0
-            color: "#000"
+            color: Theme.searchBarBackGradientStartColor
         }
         GradientStop {
             position: 1.0
-            color: Qt.rgba(0, 0, 0, 0)
+            color: Theme.searchBarBackGradientStopColor
         }
     }
 
     // Black container around the search bar
     Rectangle {
         id: searchBarId
-        color: "#222"
-        anchors.centerIn: parent
-        width: 600
-        height: content.implicitHeight + 16
-        radius: 1000
-        border.color: searchTextFieldId.focus ? "#333" : "#222"
-        border.width: 1.5
+        color: Theme.searchBarColor
+        // anchors.centerIn: parent
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.topMargin: Theme.searchBarTopMargin
+        width: Theme.searchBarWidth
+        height: content.implicitHeight + Theme.searchBarVerticalPadding
+        radius: Theme.searchBarRadius
+        border.color: searchTextFieldId.focus ? Theme.searchBarBorderColorFocused : Theme.searchBarBorderColor
+        border.width: Theme.searchBarBorderWidth
 
         Keys.onEscapePressed: {
             searchTextFieldId.focus = false
@@ -47,17 +51,17 @@ Rectangle {
         layer.effect: MultiEffect {
             shadowEnabled: true
             shadowHorizontalOffset: 0
-            shadowVerticalOffset: 2
-            shadowBlur: 1.4
-            shadowColor: "black"
+            shadowVerticalOffset: Theme.searchBarShadowOffset
+            shadowBlur: Theme.searchBarShadowBlur
+            shadowColor: Theme.searchBarShadowColor
         }
 
         // Container containing the search bar and tool buttons (add, sort, list/grid view)
         RowLayout {
             id: content
             anchors.fill: parent
-            anchors.leftMargin: 16
-            anchors.rightMargin: 16
+            anchors.leftMargin: Theme.searchBarHorizontalPadding
+            anchors.rightMargin: Theme.searchBarHorizontalPadding 
             spacing: 0
 
             TextField {
@@ -66,40 +70,55 @@ Rectangle {
                 Layout.fillHeight: true
                 Layout.fillWidth: true // fillWidth -> take the remaining space horizontally
                 background: null
-                color: "white"
-                placeholderTextColor: "gray"
+                color: Theme.searchBarTextColor
+                placeholderTextColor: Theme.searchBarPlaceholderColor
 
                 onTextChanged: gameManager.setFilterText(text)
             }
 
-            // Add Button
-            GHDToolButton {
-                iconName: "add"
-                iconSource: "qrc:/icons/icon_add.svg"
-                iconColor: "#888"
-                iconColorPressed: "#272727"
-                iconColorHovered: "#333"
-                onClicked: {
-                    var component = Qt.createComponent("../windows/AddGameWindow.qml")
-                    if (component.status === Component.Ready) {
-                        var win = component.createObject(null, {
-                                                             "visible": true
-                                                         })
-                        win.show()
-                    }
-                }
-            }
 
-            // Sort Button
+
+            // Sort Button 1
             GHDToolButton {
                 iconName: "sort"
                 iconSource: "qrc:/icons/icon_sort.svg"
-                iconColor: "#888"
-                iconColorPressed: "#272727"
-                iconColorHovered: "#333"
+                iconColor: Theme.toolButtonIconColorMute
+                iconColorPressed: Theme.toolButtonPressedColor
+                iconColorHovered: Theme.toolButtonHoveredColor
                 checkable: true
                 checked: true // true because our cpp code is set to ascending by default
                 onCheckedChanged: {
+                    //TODO: set sort mode
+                    gameManager.setAscending(checked)
+                }
+            }
+
+            // Sort Button 2
+            GHDToolButton {
+                iconName: "sort"
+                iconSource: "qrc:/icons/icon_sort.svg"
+                iconColor: Theme.toolButtonIconColorMute
+                iconColorPressed: Theme.toolButtonPressedColor
+                iconColorHovered: Theme.toolButtonHoveredColor
+                checkable: true
+                checked: true // true because our cpp code is set to ascending by default
+                onCheckedChanged: {
+                    //TODO: set sort mode
+                    gameManager.setAscending(checked)
+                }
+            }
+
+            // Sort Button 3
+            GHDToolButton {
+                iconName: "sort"
+                iconSource: "qrc:/icons/icon_sort.svg"
+                iconColor: Theme.toolButtonIconColorMute
+                iconColorPressed: Theme.toolButtonPressedColor
+                iconColorHovered: Theme.toolButtonHoveredColor
+                checkable: true
+                checked: true // true because our cpp code is set to ascending by default
+                onCheckedChanged: {
+                    //TODO: set sort mode
                     gameManager.setAscending(checked)
                 }
             }
@@ -108,14 +127,32 @@ Rectangle {
             GHDToolButton {
                 iconName: "list"
                 iconSource: viewLoader.sourceComponent === gridViewComponent ? "qrc:/icons/icon_list_view.svg" : "qrc:/icons/icon_grid_view_outline.svg"
-                iconColor: "#888"
-                iconColorPressed: "#272727"
-                iconColorHovered: "#333"
+                iconColor: Theme.toolButtonIconColor
+                iconColorPressed: Theme.toolButtonPressedColor
+                iconColorHovered: Theme.toolButtonHoveredColor
 
                 onClicked: {
                     viewLoader.sourceComponent
                             = (viewLoader.sourceComponent
                                === gridViewComponent) ? listViewComponent : gridViewComponent
+                }
+            }
+
+            // Add Button
+            GHDToolButton {
+                iconName: "add"
+                iconSource: "qrc:/icons/icon_add.svg"
+                iconColor: Theme.toolButtonIconColor
+                iconColorPressed: Theme.toolButtonPressedColor
+                iconColorHovered: Theme.toolButtonHoveredColor
+                onClicked: {
+                    var component = Qt.createComponent("../windows/AddGameWindow.qml")
+                    if (component.status === Component.Ready) {
+                        var win = component.createObject(null, {
+                                                             "visible": true
+                                                         })
+                        win.show()
+                    }
                 }
             }
         }

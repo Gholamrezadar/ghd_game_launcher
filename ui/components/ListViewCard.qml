@@ -4,15 +4,29 @@ import QtQuick.Effects
 
 Rectangle {
     width: ListView.view.width
-    height: 100
+    height: Theme.listViewCardHeight+Theme.listViewCardVerticalMargin*2
     color: "transparent"
 
     Rectangle {
         id: listCard
         anchors.fill: parent
-        anchors.margins: 4
-        color: "#2a2a2a"
-        radius: 8
+        anchors.leftMargin: Theme.listViewCardHorizontalMargin
+        anchors.rightMargin: Theme.listViewCardHorizontalMargin
+        anchors.bottomMargin: Theme.listViewCardVerticalMargin
+        anchors.topMargin: Theme.listViewCardVerticalMargin
+        color: Theme.listViewCardColor
+        radius: Theme.listViewCardRadius
+        border.color: Theme.searchBarBorderColorFocused
+        border.width: Theme.searchBarBorderWidth
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            shadowEnabled: true
+            shadowHorizontalOffset: 0
+            shadowVerticalOffset: Theme.searchBarShadowOffset
+            shadowBlur: Theme.searchBarShadowBlur
+            shadowColor: Theme.searchBarShadowColor
+        }
 
         // States for hover/press
         state: "default"
@@ -22,25 +36,25 @@ Rectangle {
                 name: "default"
                 PropertyChanges {
                     target: listCard
-                    color: "#2a2a2a"
+                    color: Theme.listViewCardColor
                 }
             },
             State {
                 name: "hovered"
                 PropertyChanges {
                     target: listCard
-                    color: "#333333"
+                    color: Theme.listViewCardHoverBackgroundColor
                 }
                 PropertyChanges {
                     target: launchButton
-                    color: "#4a9eff"
+                    color: "red"
                 }
             },
             State {
                 name: "pressed"
                 PropertyChanges {
                     target: listCard
-                    color: "#3a3a3a"
+                    color: Theme.listViewCardColor
                 }
             }
         ]
@@ -63,9 +77,9 @@ Rectangle {
 
             // Game poster/image on the left
             Rectangle {
-                width: 76
-                height: 76
-                radius: 6
+                width: 200
+                height: 300
+                radius: Theme.listViewCardRadius
                 color: "#1a1a1a"
                 clip: true
 
@@ -74,7 +88,7 @@ Rectangle {
                     source: modelData.posterUrl ? "file:///" + modelData.posterUrl : ""
                     fillMode: Image.PreserveAspectCrop
                     visible: modelData.posterUrl !== ""
-                    radius: 6
+                    radius: Theme.listViewCardRadius
                 }
 
                 // Fallback
@@ -90,8 +104,8 @@ Rectangle {
 
             // Game info (name and metadata)
             Column {
-                width: parent.width - 76 - 140 - 32 // Remaining space
-                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width - 200 - 140 - 32 // Remaining space
+                anchors.top: parent.top
                 spacing: 8
 
                 // Game name
@@ -173,11 +187,12 @@ Rectangle {
             // Launch button
             Rectangle {
                 id: launchButton
-                width: 120
-                height: 40
-                radius: 6
-                color: "#3d8aed"
+                width: Theme.listViewCardLaunchButtonWidth
+                height: Theme.listViewCardLaunchButtonHeight
+                radius: Theme.listViewCardLaunchButtonRadius
+                color: Theme.listViewCardLaunchButtonColor
                 anchors.verticalCenter: parent.verticalCenter
+                z:103
 
                 // Button states
                 state: "default"
@@ -187,25 +202,25 @@ Rectangle {
                         name: "default"
                         PropertyChanges {
                             target: launchButton
-                            color: "#3d8aed"
+                            color: Theme.listViewCardLaunchButtonColor
                         }
                     },
                     State {
                         name: "hovered"
                         PropertyChanges {
                             target: launchButton
-                            color: "#4a9eff"
+                            color: Theme.listViewCardLaunchButtonHoverColor
                         }
                     },
                     State {
                         name: "pressed"
                         PropertyChanges {
                             target: launchButton
-                            color: "#2d6abd"
+                            color: Theme.listViewCardLaunchButtonPressedColor
                         }
                         PropertyChanges {
                             target: launchButton
-                            scale: 0.96
+                            scale: Theme.listViewCardLaunchButtonScale
                         }
                     }
                 ]
@@ -248,6 +263,8 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
+                    z:104
+                    cursorShape: Qt.PointingHandCursor
 
                     onEntered: launchButton.state = "hovered"
                     onExited: launchButton.state = "default"
@@ -265,8 +282,9 @@ Rectangle {
         // Card hover detection
         MouseArea {
             anchors.fill: parent
-            hoverEnabled: true
+            hoverEnabled: false
             propagateComposedEvents: true
+            z:55
 
             onEntered: listCard.state = "hovered"
             onExited: listCard.state = "default"

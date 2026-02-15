@@ -3,14 +3,29 @@ import QtQuick.Controls.Universal
 import QtQuick.Layouts 1.15
 import QtQuick.Effects
 import "../components"
+import "../theme"
 
 ApplicationWindow {
     title: "GHD Launcher"
     visible: true
-    width: 1000
+    width: 1050
     height: 700
     minimumWidth: 620 + 16
     Universal.theme: Universal.Dark
+    color: Theme.backgroundColor
+
+    Component.onCompleted: {
+        print("Games:")
+        for(let i = 0; i < 100; i++) {
+            print("Name:", gameManager.displayGames[i].name)
+            print("Poster:", gameManager.displayGames[i].posterUrl)
+            print("totalPlaytimeSec:", gameManager.displayGames[i].totalPlaytimeSec)
+            print("playtimeMin:", gameManager.displayGames[i].playtimeMin)
+            print("lastPlayed:", gameManager.displayGames[i].lastPlayed)
+            print("dateAdded:", gameManager.displayGames[i].dateAdded)
+            print()
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -33,6 +48,8 @@ ApplicationWindow {
                 sourceComponent: gridViewComponent // GridView by default
                 anchors.fill: parent
                 anchors.horizontalCenter: parent.horizontalCenter
+                // anchors.leftMargin: Theme.gridViewPadding
+                // anchors.rightMargin: Theme.gridViewPadding
             }
 
             // 1. Grid View Component
@@ -43,29 +60,42 @@ ApplicationWindow {
                 GridView {
                     id: gridId
                     boundsBehavior: Flickable.StopAtBounds
-                    cellWidth: 200
-                    cellHeight: 300
+                    cellWidth: Theme.gridViewCardWidth
+                    cellHeight: Theme.gridViewCardHeight 
                     displayMarginBeginning: 500 // Paint delegates before visible area
                     displayMarginEnd: 100 // Paint delegates after visible area
+                    anchors.fill: parent
+                    // anchors.margins: 100
 
-                    // clip: true
+                    clip: true
                     model: gameManager.displayGames
 
                     // center children horizontally
                     property int columns: Math.floor(width / cellWidth)
                     property real rowWidth: columns * cellWidth
-                    property real horizontalPadding: Math.max(
-                                                         0,
-                                                         (width - rowWidth) / 2)
+                    property real horizontalPadding: Math.max(0, (width - rowWidth) / 2)
+                    contentX: horizontalPadding
                     Binding {
                         target: gridId
                         property: "contentX"
                         value: -gridId.horizontalPadding
-                        when: gridId.horizontalPadding !== undefined
+                        when: true
                     }
                     Component.onCompleted: {
                         gridId.contentX = -gridId.horizontalPadding
+                        // print(gridId.horizontalPadding)
                     }
+                    Connections {
+                        target: gameManager
+                        function onDisplayGamesChanged() {
+                            Qt.callLater(() => {
+                                gridId.forceLayout()
+                                gridId.contentX = -gridId.horizontalPadding
+                            })
+                        }
+                    }
+
+                    
 
                     // Grid Cell
                     delegate: GridViewCard {}
@@ -80,9 +110,11 @@ ApplicationWindow {
                 ListView {
                     boundsBehavior: Flickable.StopAtBounds
                     model: gameManager.displayGames
-                    // clip: true
+                    clip: true
                     displayMarginBeginning: 500 // Paint delegates before visible area
                     displayMarginEnd: 100 // Paint delegates after visible area
+                    // anchors.leftMargin: 30
+
 
 
                     // List View Delegate

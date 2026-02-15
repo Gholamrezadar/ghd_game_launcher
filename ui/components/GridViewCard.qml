@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts 1.15
 import QtQuick.Effects
 import "../utils"
+// import "../theme"
 
 Rectangle {
 
@@ -12,19 +13,17 @@ Rectangle {
     // Visible Card
     Rectangle {
         id: card
-        color: "#333"
-        radius: 8
-        anchors.margins: 8
+        color: Theme.gridViewCardColor
+        radius: Theme.gridViewCardRadius
+        anchors.margins: Theme.gridViewCardMargin
         anchors.fill: parent
         clip: true
 
-        // 1. Enable Layer and MultiEffect
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            maskSource: maskContainer
-        }
+        // layer.enabled: true
+        // layer.effect: MultiEffect {
+        //     maskSource: maskContainer
+        // }
 
-        // 2. Define the Mask Shape
         Item {
             id: maskContainer
             anchors.fill: parent
@@ -32,7 +31,7 @@ Rectangle {
             Rectangle {
                 anchors.fill: parent
                 radius: card.radius
-                color: "black"
+                color: Theme.gridViewCardHoverBackgroundColor
             }
         }
 
@@ -98,7 +97,7 @@ Rectangle {
             source: "file:///" + modelData.posterUrl || ""
             fillMode: Image.PreserveAspectCrop
             visible: modelData.posterUrl !== ""
-            radius: 8
+            radius: Theme.gridViewCardRadius
         }
 
         // Fallback background when no poster
@@ -120,9 +119,9 @@ Rectangle {
         Rectangle {
             id: overlay
             anchors.fill: parent
-            color: "#000000"
+            color: Theme.gridViewCardHoverBackgroundColor
             opacity: 0.0
-            radius: 8
+            radius: Theme.gridViewCardRadius
         }
 
         // Game information at bottom (fades in on hover)
@@ -139,9 +138,9 @@ Rectangle {
             Text {
                 width: parent.width
                 text: modelData.name
-                font.pixelSize: 16
+                font.pixelSize: Theme.gridViewCardTitleSize
                 font.bold: true
-                color: "white"
+                color: Theme.gridViewCardTitleColor
                 elide: Text.ElideRight
                 maximumLineCount: 2
                 wrapMode: Text.Wrap
@@ -153,8 +152,8 @@ Rectangle {
                 // text: modelData.playtimeMin + " Minutes  |  Played " + Qt.formatDate(
                 //           modelData.lastPlayed, "M/d/yyyy")
                 text: Utils.formatPlaytime(modelData.totalPlaytimeSec) + " | " + Utils.formatLastPlayed(modelData.lastPlayed)
-                font.pixelSize: 11
-                color: "#ccc"
+                font.pixelSize: Theme.gridViewCardSubtitleSize
+                color: Theme.gridViewCardSubtitleColor
                 elide: Text.ElideRight
             }
         }
