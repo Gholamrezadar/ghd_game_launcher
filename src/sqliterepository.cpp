@@ -252,3 +252,51 @@ qint64 SQLiteRepository::getGameMaxSessionDuration(const QString &gameName) cons
     qWarning() << "Failed to get max session duration:" << query.lastError().text();
     return 0;
 }
+
+QVector<DailyPlaytime> SQLiteRepository::getPast30DaysPlaytime(const QString &gameName) const
+{
+    QVector<DailyPlaytime> result;
+    
+    // Get game_id first
+    QSqlQuery gameQuery(m_db);
+    gameQuery.prepare("SELECT id FROM games WHERE name = ?");
+    gameQuery.addBindValue(gameName);
+    
+    if (!gameQuery.exec() || !gameQuery.next()) {
+        qWarning() << "Game not found:" << gameName;
+        return result;
+    }
+    
+    int gameId = gameQuery.value(0).toInt();
+    
+    // Query sessions from the past 30 days, grouped by date
+    QSqlQuery query(m_db);
+    query.prepare(
+        R"(
+        SELECT 
+            date(start_time, 'unixepoch', 'localtime') as play_date,
+            SUM(duration_sec) as total_seconds
+        FROM sessions
+        WHERE game_id = ?
+            AND start_time >= strftime('%s', 'now', '-30 days')
+            AND duration_sec IS NOT NULL
+        GROUP BY play_date
+        ORDER BY play_date ASC
+        )"
+    );
+    query.addBindValue(gameId);
+    
+    if (!query.exec()) {
+        qCritical() << "Failed to query past 30 days playtime:" << query.lastError().text();
+        return result;
+    }
+    
+    while (query.next()) {
+        DailyPlaytime entry;
+        entry.date = query.value(0).toString();
+        entry.seconds = query.value(1).toLongLong();
+        result.append(entry);
+    }
+    
+    return result;
+}

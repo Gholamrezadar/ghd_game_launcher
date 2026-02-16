@@ -34,6 +34,13 @@ public:
     int getGameSessionCount(const QString &gameName) const override;
     qint64 getGameMaxSessionDuration(const QString &gameName) const override;
 
+    // struct DailyPlaytime {
+    //     QString date;      // YYYY-MM-DD format
+    //     qint64 seconds;    // Total seconds played that day
+    // };
+
+    QVector<DailyPlaytime> getPast30DaysPlaytime(const QString &gameName) const override;
+
 private:
     QSqlDatabase m_db;
 
