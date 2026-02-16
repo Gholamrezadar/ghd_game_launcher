@@ -30,6 +30,10 @@ public:
     void recordSessionStart(const QString &gameName) override;
     void recordSessionEnd(const QString &gameName, qint64 durationSec) override;
 
+    // Get stats
+    int getGameSessionCount(const QString &gameName) const override;
+    qint64 getGameMaxSessionDuration(const QString &gameName) const override;
+
 private:
     QSqlDatabase m_db;
 

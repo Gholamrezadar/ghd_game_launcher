@@ -27,4 +27,8 @@ public:
     // Session-related persistence (later expanded)
     virtual void recordSessionStart(const QString &gameName) = 0;
     virtual void recordSessionEnd(const QString &gameName, qint64 durationSec) = 0;
+
+    // Get stats
+    int getGameSessionCount(const QString &gameName) const override;
+    qint64 getGameMaxSessionDuration(const QString &gameName) const override;
 };

@@ -301,3 +301,13 @@ void GameManager::rebuildDisplayGames()
 
     emit displayGamesChanged();
 }
+
+int GameManager::getGameSessionCount(const QString &name) const
+{
+    return m_repository->getGameSessionCount(name);
+}
+
+qint64 GameManager::getGameMaxSessionDuration(const QString &name) const
+{
+    return m_repository->getGameMaxSessionDuration(name);
+}

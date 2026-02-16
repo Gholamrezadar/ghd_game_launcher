@@ -37,6 +37,9 @@ public:
     Q_INVOKABLE void setAscending(bool isAscending);
     Q_INVOKABLE void setFilterText(const QString &filterText);
 
+    Q_INVOKABLE int getGameSessionCount(const QString &name) const;
+    Q_INVOKABLE qint64 getGameMaxSessionDuration(const QString &name) const;
+
     // Getters for properties
     QVariantList games() const;
     QVariantList displayGames() const;

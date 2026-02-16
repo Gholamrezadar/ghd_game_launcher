@@ -214,3 +214,41 @@ void SQLiteRepository::recordSessionEnd(const QString &gameName, qint64 duration
         qDebug() << "Session updated successfully for game:" << gameName;
     }
 }
+
+int SQLiteRepository::getGameSessionCount(const QString &gameName) const
+{
+    QSqlQuery query;
+    query.prepare(R"(
+        SELECT COUNT(*) 
+        FROM sessions s
+        JOIN games g ON s.game_id = g.id
+        WHERE g.name = :name
+    )");
+    query.bindValue(":name", gameName);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt();
+    }
+
+    qWarning() << "Failed to get session count:" << query.lastError().text();
+    return 0;
+}
+
+qint64 SQLiteRepository::getGameMaxSessionDuration(const QString &gameName) const
+{
+    QSqlQuery query;
+    query.prepare(R"(
+        SELECT MAX(duration_sec) 
+        FROM sessions s
+        JOIN games g ON s.game_id = g.id
+        WHERE g.name = :name
+    )");
+    query.bindValue(":name", gameName);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toLongLong();
+    }
+
+    qWarning() << "Failed to get max session duration:" << query.lastError().text();
+    return 0;
+}
