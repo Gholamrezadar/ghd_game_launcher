@@ -22,6 +22,8 @@ QtObject {
         if (hours > 1) {
             return hours + " Hours";
         }
+
+        return "Not Played";
     }
 
     // Helper function to format lastPlayed date

@@ -11,5 +11,8 @@
     <file>icons/icon_calendar_2.svg</file>
     <file>icons/icon_calendar_1.svg</file>
     <file>icons/icon_install_date.svg</file>
+    <file>icons/icon_edit_3.svg</file>
+    <file>icons/icon_edit_1.svg</file>
+    <file>icons/icon_edit_2.svg</file>
   </qresource>
 </RCC>

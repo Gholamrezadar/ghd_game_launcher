@@ -6,9 +6,11 @@ import "../utils"
 
 Rectangle {
 
+    property bool isHovered: mouseArea.containsMouse || editButton.hovered
     width: gridId.cellWidth
     height: gridId.cellHeight
     color: "transparent"
+
 
     // Visible Card
     Rectangle {
@@ -17,78 +19,7 @@ Rectangle {
         radius: Theme.gridViewCardRadius
         anchors.margins: Theme.gridViewCardMargin
         anchors.fill: parent
-        clip: true
-
-        // layer.enabled: true
-        // layer.effect: MultiEffect {
-        //     maskSource: maskContainer
-        // }
-
-        Item {
-            id: maskContainer
-            anchors.fill: parent
-            visible: false
-            Rectangle {
-                anchors.fill: parent
-                radius: card.radius
-                color: Theme.gridViewCardHoverBackgroundColor
-            }
-        }
-
-        // States
         state: "default"
-
-        states: [
-            State {
-                name: "default"
-                PropertyChanges {
-                    target: overlay
-                    opacity: 0.0
-                }
-                PropertyChanges {
-                    target: gameInfo
-                    opacity: 0.0
-                }
-            },
-            State {
-                name: "hovered"
-                PropertyChanges {
-                    target: overlay
-                    opacity: 1.0
-                }
-                PropertyChanges {
-                    target: gameInfo
-                    opacity: 1.0
-                }
-            },
-            State {
-                name: "pressed"
-                PropertyChanges {
-                    target: overlay
-                    opacity: 0.8
-                }
-                PropertyChanges {
-                    target: gameInfo
-                    opacity: 1.0
-                }
-                PropertyChanges {
-                    target: card
-                    scale: 0.98
-                }
-            }
-        ]
-
-        transitions: [
-            Transition {
-                from: "*"
-                to: "*"
-                NumberAnimation {
-                    properties: "opacity,scale"
-                    duration: 200
-                    easing.type: Easing.OutQuad
-                }
-            }
-        ]
 
         // Full screen poster/image (always visible)
         RoundedImage {
@@ -98,6 +29,39 @@ Rectangle {
             fillMode: Image.PreserveAspectCrop
             visible: modelData.posterUrl !== ""
             radius: Theme.gridViewCardRadius
+        }
+
+        GHDToolButton {
+            id: editButton
+            toolTipText: "Edit information"
+            iconSource: "qrc:/icons/icon_edit_2.svg"
+            z: 10000
+            opacity: isHovered ? 1 : 0
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.topMargin: 4
+            anchors.rightMargin: 4
+            iconColor: Theme.toolButtonIconColor
+            iconColorPressed: Theme.toolButtonPressedColor
+            iconColorHovered: Theme.toolButtonHoveredColor
+
+            onHoveredChanged: {
+                if (hovered) {
+                    card.state = "hovered"
+                } else if (!mouseArea.containsMouse) {
+                    card.state = "default"
+                }
+            }
+
+            onClicked: {
+                var component = Qt.createComponent("../windows/AddGameWindow.qml") // TODO: change to edit game window
+                if (component.status === Component.Ready) {
+                    var win = component.createObject(null, {
+                                                         "visible": true
+                                                     })
+                    win.show()
+                }
+            }
         }
 
         // Fallback background when no poster
@@ -171,11 +135,17 @@ Rectangle {
 
         // Mouse interaction
         MouseArea {
+            id: mouseArea
             anchors.fill: parent
             hoverEnabled: true
 
             onEntered: card.state = "hovered"
-            onExited: card.state = "default"
+            onExited: {
+                // Only exit hover state if we're not hovering the edit button
+                if (!editButton.hovered) {
+                    card.state = "default"
+                }
+            }
             onPressed: card.state = "pressed"
             onReleased: card.state = containsMouse ? "hovered" : "default"
             cursorShape: "PointingHandCursor"
@@ -186,5 +156,67 @@ Rectangle {
                 gameManager.launchGame(modelData.name)
             }
         }
+
+        // States
+        states: [
+            State {
+                name: "default"
+                PropertyChanges {
+                    target: overlay
+                    opacity: 0.0
+                }
+                PropertyChanges {
+                    target: gameInfo
+                    opacity: 0.0
+                }
+                PropertyChanges {
+                    target: editButton
+                    opacity: 0.0
+                }
+            },
+            State {
+                name: "hovered"
+                PropertyChanges {
+                    target: overlay
+                    opacity: 1.0
+                }
+                PropertyChanges {
+                    target: gameInfo
+                    opacity: 1.0
+                }
+                PropertyChanges {
+                    target: editButton
+                    opacity: 1.0
+                }
+            },
+            State {
+                name: "pressed"
+                PropertyChanges {
+                    target: overlay
+                    opacity: 0.8
+                }
+                PropertyChanges {
+                    target: gameInfo
+                    opacity: 1.0
+                }
+                PropertyChanges {
+                    target: card
+                    scale: 0.98
+                }
+            }
+        ]
+
+        // Transitions
+        transitions: [
+            Transition {
+                from: "*"
+                to: "*"
+                NumberAnimation {
+                    properties: "opacity,scale"
+                    duration: 200
+                    easing.type: Easing.OutQuad
+                }
+            }
+        ]
     }
 }
