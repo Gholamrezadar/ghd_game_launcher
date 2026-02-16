@@ -89,6 +89,7 @@ Rectangle {
                 checked: true // true because our cpp code is set to ascending by default
                 onCheckedChanged: {
                     //TODO: set sort mode
+                    gameManager.setSortMode(0)
                     gameManager.setAscending(checked)
                 }
             }
@@ -104,6 +105,7 @@ Rectangle {
                 checked: true // true because our cpp code is set to ascending by default
                 onCheckedChanged: {
                     //TODO: set sort mode
+                    gameManager.setSortMode(1)
                     gameManager.setAscending(checked)
                 }
             }
@@ -119,6 +121,7 @@ Rectangle {
                 checked: true // true because our cpp code is set to ascending by default
                 onCheckedChanged: {
                     //TODO: set sort mode
+                    gameManager.setSortMode(2)
                     gameManager.setAscending(checked)
                 }
             }
@@ -140,7 +143,7 @@ Rectangle {
 
             // Add Button
             GHDToolButton {
-                iconName: "add"
+                iconName: "addl"
                 iconSource: "qrc:/icons/icon_add.svg"
                 iconColor: Theme.toolButtonIconColor
                 iconColorPressed: Theme.toolButtonPressedColor

@@ -22,6 +22,7 @@ class GameManager : public QObject
     // Properties
     Q_PROPERTY(QVariantList games READ games NOTIFY gamesChanged)
     Q_PROPERTY(QVariantList displayGames READ displayGames NOTIFY displayGamesChanged)
+    Q_PROPERTY(int sortMode READ sortMode WRITE setSortMode NOTIFY sortModeChanged)
 
 public:
     explicit GameManager(GameRepository *repository, QObject *parent = nullptr);
@@ -39,6 +40,7 @@ public:
     // Getters for properties
     QVariantList games() const;
     QVariantList displayGames() const;
+    int sortMode() const;
 
 signals:
     void gamesChanged();

@@ -79,6 +79,10 @@ QVariantList GameManager::displayGames() const
 
 }
 
+int GameManager::sortMode() const {
+    return m_sortIndex;
+}
+
 // Launch a game given index
 void GameManager::launchGame(const QString &name)
 {
@@ -219,8 +223,10 @@ void GameManager::updateGame(const QString &name, const QVariantMap& fields)
     emit gamesChanged();
 }
 
-void GameManager::setSortMode(int sortIndex)
-{
+// Sort Mode 0: playtime
+// Sort Mode 1: last played date
+// Sort Mode 2: added
+void GameManager::setSortMode(int sortIndex) {
     if (m_sortIndex == sortIndex)
         return;
 
@@ -265,9 +271,18 @@ void GameManager::rebuildDisplayGames()
                   bool less = false;
                   switch (m_sortIndex) {
                       //TODO: implement actual sort strategies
-                      case 0: less = a.name < b.name; break;
-                      case 1: less = a.lastPlayed < b.lastPlayed; break;
-                      case 2: less = a.totalPlaytimeSec < b.totalPlaytimeSec; break;
+                  case 0:
+                      less = a.totalPlaytimeSec < b.totalPlaytimeSec;
+                      break;
+                  case 1:
+                      less = a.lastPlayed < b.lastPlayed;
+                      break;
+                  case 2:
+                      less = a.dateAdded < b.dateAdded;
+                      break;
+                  case 3:
+                      less = a.name < b.name;
+                      break;
                   }
                   return m_isAscending ? less : !less;
               });
