@@ -50,10 +50,11 @@ QtObject {
     readonly property color gridViewCardHoverBackgroundColor: 'black'
 
     // ListView
-    readonly property int   listViewCardHeight: 328
-    readonly property int   listViewCardVerticalMargin: 8
-    readonly property int   listViewCardHorizontalMargin: 16
-    readonly property color listViewCardColor: Qt.rgba(0.086, 0.086, 0.086, 1)
+    readonly property int   listViewCardHeight: 300
+    readonly property int   listViewCardTopMargin: 4
+    readonly property int   listViewCardBottomMargin: 16
+    readonly property int   listViewCardHorizontalMargin: 64
+    readonly property color listViewCardColor: searchBarColor
     readonly property int   listViewCardRadius: 8
     readonly property color listViewCardHoverBackgroundColor: '#4bffffff'
     readonly property color listViewCardTitleColor: '#ffffff'

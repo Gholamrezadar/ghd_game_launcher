@@ -130,6 +130,11 @@ Rectangle {
                 
             }
 
+            // Spacer
+            Item {
+                width: 10
+            }
+
             // Grid/List View Button
             GHDToolButton {
                 toolTipText: viewLoader.sourceComponent === gridViewComponent ? "List View" : "Grid View"

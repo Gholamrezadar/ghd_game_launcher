@@ -30,11 +30,12 @@ ToolButton {
         id: tapHandler
     }
 
+    // Background Circle (that shows up on hover)
     Rectangle {
         id: backgroundRect
         color: "transparent"
         anchors.fill: parent
-        anchors.margins: 1
+        anchors.margins: 0
         radius: 1000
 
         states: [
