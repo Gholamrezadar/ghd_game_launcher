@@ -90,6 +90,9 @@ Rectangle {
                 checked: true // true because our cpp code is set to ascending by default
                 onCheckedChanged: {
                     //TODO: set sort mode
+                    if(gameManager?.sortMode != 0) {
+                        checked = true; // only change asc/desc when you are already on the same sorting mode otherwise default to asc
+                    }
                     gameManager?.setSortMode(0)
                     gameManager?.setAscending(checked)
                 }
@@ -107,7 +110,10 @@ Rectangle {
                 checked: true // true because our cpp code is set to ascending by default
                 onCheckedChanged: {
                     //TODO: set sort mode
+                    if(gameManager?.sortMode != 1) {
+                        checked = true; // only change asc/desc when you are already on the same sorting mode otherwise default to asc
                     gameManager?.setSortMode(1)
+                    }
                     gameManager?.setAscending(checked)
                 }
             }
@@ -124,6 +130,9 @@ Rectangle {
                 checked: true // true because our cpp code is set to ascending by default
                 onCheckedChanged: {
                     //TODO: set sort mode
+                    if(gameManager?.sortMode != 2) {
+                        checked = true; // only change asc/desc when you are already on the same sorting mode otherwise default to asc
+                    }
                     gameManager.setSortMode(2)
                     gameManager.setAscending(checked)
                 }

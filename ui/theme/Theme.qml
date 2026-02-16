@@ -54,21 +54,18 @@ QtObject {
     readonly property int   listViewCardTopMargin: 4
     readonly property int   listViewCardBottomMargin: 16
     readonly property int   listViewCardHorizontalMargin: 64
+    readonly property int   listViewInfoboxPadding: 12
     readonly property color listViewCardColor: searchBarColor
+    readonly property color listViewCardColorHover: Qt.rgba(0.2,0.2,0.2,1)
     readonly property int   listViewCardRadius: 8
-    readonly property color listViewCardHoverBackgroundColor: '#4bffffff'
-    readonly property color listViewCardTitleColor: '#ffffff'
-    readonly property color listViewCardSubtitleColor: '#aaa'
     readonly property color listViewCardPlaytimeColor: '#888'
     readonly property color listViewCardLastPlayedColor: '#aaa'
     readonly property color listViewCardDateAddedColor: '#aaa'
-    readonly property color listViewCardLaunchButtonColor: '#3d8aed'
-    readonly property color listViewCardLaunchButtonHoverColor: '#4a9eff'
-    readonly property color listViewCardLaunchButtonPressedColor: '#2d6abd'
-    readonly property real  listViewCardLaunchButtonScale: 0.96
-    readonly property real  listViewCardLaunchButtonWidth: 120
-    readonly property real  listViewCardLaunchButtonHeight: 40
-    readonly property real  listViewCardLaunchButtonRadius: 6
+    readonly property int   listViewCardTitleSize: 18
+    readonly property int   listViewCardSubtitleSize: 18
+    readonly property color listViewCardTitleColor: Qt.rgba(1,1,1,0.95)
+    readonly property color listViewCardSubtitleColor: Qt.rgba(1,1,1,0.65)
+    readonly property color listViewCardExtraInfoColor: Qt.rgba(1,1,1,0.35)
 
 }
 

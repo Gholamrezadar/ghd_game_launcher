@@ -8,7 +8,7 @@ import "../theme"
 ApplicationWindow {
     title: "GHD Launcher"
     visible: true
-    width: 1050
+    width: 1120
     height: 700
     minimumWidth: 620 + 16
     Universal.theme: Universal.Dark
@@ -49,8 +49,8 @@ ApplicationWindow {
                     boundsBehavior: Flickable.StopAtBounds
                     cellWidth: Theme.gridViewCardWidth
                     cellHeight: Theme.gridViewCardHeight 
-                    displayMarginBeginning: 500 // Paint delegates before visible area
-                    displayMarginEnd: 100 // Paint delegates after visible area
+                    // displayMarginBeginning: 500 // Paint delegates before visible area
+                    // displayMarginEnd: 100 // Paint delegates after visible area
                     anchors.fill: parent
                     // anchors.margins: 100
 
@@ -98,8 +98,8 @@ ApplicationWindow {
                     boundsBehavior: Flickable.StopAtBounds
                     model: gameManager.displayGames
                     clip: true
-                    displayMarginBeginning: 500 // Paint delegates before visible area
-                    displayMarginEnd: 100 // Paint delegates after visible area
+                    // displayMarginBeginning: 500 // Paint delegates before visible area
+                    // displayMarginEnd: 100 // Paint delegates after visible area
                     // anchors.leftMargin: 30
 
 
