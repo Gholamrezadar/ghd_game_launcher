@@ -8,24 +8,11 @@ import "../theme"
 ApplicationWindow {
     title: "GHD Launcher"
     visible: true
-    width: 1050
+    width: 1120
     height: 700
     minimumWidth: 620 + 16
     Universal.theme: Universal.Dark
     color: Theme.backgroundColor
-
-    Component.onCompleted: {
-        print("Games:")
-        for(let i = 0; i < 100; i++) {
-            print("Name:", gameManager.displayGames[i].name)
-            print("Poster:", gameManager.displayGames[i].posterUrl)
-            print("totalPlaytimeSec:", gameManager.displayGames[i].totalPlaytimeSec)
-            print("playtimeMin:", gameManager.displayGames[i].playtimeMin)
-            print("lastPlayed:", gameManager.displayGames[i].lastPlayed)
-            print("dateAdded:", gameManager.displayGames[i].dateAdded)
-            print()
-        }
-    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -62,13 +49,13 @@ ApplicationWindow {
                     boundsBehavior: Flickable.StopAtBounds
                     cellWidth: Theme.gridViewCardWidth
                     cellHeight: Theme.gridViewCardHeight 
-                    displayMarginBeginning: 500 // Paint delegates before visible area
-                    displayMarginEnd: 100 // Paint delegates after visible area
+                    // displayMarginBeginning: 500 // Paint delegates before visible area
+                    // displayMarginEnd: 100 // Paint delegates after visible area
                     anchors.fill: parent
                     // anchors.margins: 100
 
                     clip: true
-                    model: gameManager.displayGames
+                    model: gameManager?.displayGames
 
                     // center children horizontally
                     property int columns: Math.floor(width / cellWidth)
@@ -111,8 +98,8 @@ ApplicationWindow {
                     boundsBehavior: Flickable.StopAtBounds
                     model: gameManager.displayGames
                     clip: true
-                    displayMarginBeginning: 500 // Paint delegates before visible area
-                    displayMarginEnd: 100 // Paint delegates after visible area
+                    // displayMarginBeginning: 500 // Paint delegates before visible area
+                    // displayMarginEnd: 100 // Paint delegates after visible area
                     // anchors.leftMargin: 30
 
 

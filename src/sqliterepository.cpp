@@ -109,6 +109,17 @@ void SQLiteRepository::addGame(const Game &game)
     }
 }
 
+// Remove a game from the database
+void SQLiteRepository::removeGame(const QString &gameName) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM games WHERE name = ?");
+    query.addBindValue(gameName);
+    
+    if (!query.exec()) {
+        qCritical() << "Failed to remove game:" << query.lastError().text();
+    }
+}
+
 // Update an existing game (stats like playtime / lastPlayed)
 void SQLiteRepository::updateGame(const Game &game)
 {
@@ -202,4 +213,90 @@ void SQLiteRepository::recordSessionEnd(const QString &gameName, qint64 duration
     else {
         qDebug() << "Session updated successfully for game:" << gameName;
     }
+}
+
+int SQLiteRepository::getGameSessionCount(const QString &gameName) const
+{
+    QSqlQuery query;
+    query.prepare(R"(
+        SELECT COUNT(*) 
+        FROM sessions s
+        JOIN games g ON s.game_id = g.id
+        WHERE g.name = :name
+    )");
+    query.bindValue(":name", gameName);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt();
+    }
+
+    qWarning() << "Failed to get session count:" << query.lastError().text();
+    return 0;
+}
+
+qint64 SQLiteRepository::getGameMaxSessionDuration(const QString &gameName) const
+{
+    QSqlQuery query;
+    query.prepare(R"(
+        SELECT MAX(duration_sec) 
+        FROM sessions s
+        JOIN games g ON s.game_id = g.id
+        WHERE g.name = :name
+    )");
+    query.bindValue(":name", gameName);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toLongLong();
+    }
+
+    qWarning() << "Failed to get max session duration:" << query.lastError().text();
+    return 0;
+}
+
+QVector<DailyPlaytime> SQLiteRepository::getPast30DaysPlaytime(const QString &gameName) const
+{
+    QVector<DailyPlaytime> result;
+    
+    // Get game_id first
+    QSqlQuery gameQuery(m_db);
+    gameQuery.prepare("SELECT id FROM games WHERE name = ?");
+    gameQuery.addBindValue(gameName);
+    
+    if (!gameQuery.exec() || !gameQuery.next()) {
+        qWarning() << "Game not found:" << gameName;
+        return result;
+    }
+    
+    int gameId = gameQuery.value(0).toInt();
+    
+    // Query sessions from the past 30 days, grouped by date
+    QSqlQuery query(m_db);
+    query.prepare(
+        R"(
+        SELECT 
+            date(start_time, 'unixepoch', 'localtime') as play_date,
+            SUM(duration_sec) as total_seconds
+        FROM sessions
+        WHERE game_id = ?
+            AND start_time >= strftime('%s', 'now', '-30 days')
+            AND duration_sec IS NOT NULL
+        GROUP BY play_date
+        ORDER BY play_date ASC
+        )"
+    );
+    query.addBindValue(gameId);
+    
+    if (!query.exec()) {
+        qCritical() << "Failed to query past 30 days playtime:" << query.lastError().text();
+        return result;
+    }
+    
+    while (query.next()) {
+        DailyPlaytime entry;
+        entry.date = query.value(0).toString();
+        entry.seconds = query.value(1).toLongLong();
+        result.append(entry);
+    }
+    
+    return result;
 }

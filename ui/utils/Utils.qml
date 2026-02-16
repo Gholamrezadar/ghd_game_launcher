@@ -3,26 +3,33 @@ import QtQuick
 
 QtObject {
     // Helper function to format playtime
-    function formatPlaytime(seconds: Number) {
+    function formatPlaytime(seconds: int): string {
         if (seconds === 0)
-            return "Not played";
+            return "Not Played";
 
         var hours = Math.floor(seconds / 3600);
         var minutes = Math.floor((seconds % 3600) / 60);
 
-        if (hours == 0) {
-           return minutes + " Minutes";
+        if (hours == 0 && minutes == 1) {
+            return "1 Minute";
         }
-        else if (hours == 1)
+        if (hours == 0 && minutes > 1) {
+            return minutes + " Minutes";
+        }
+        if (hours == 1) {
             return "1 Hour";
-        else
+        }
+        if (hours > 1) {
             return hours + " Hours";
+        }
+
+        return "Not Played";
     }
 
     // Helper function to format lastPlayed date
-    function formatLastPlayed(lastPlayed) {
+    function formatLastPlayed(lastPlayed: string): string {
         // Never Played
-        if (!lastPlayed){
+        if (!lastPlayed) {
             return "Never Played";
         }
 
@@ -62,5 +69,50 @@ QtObject {
 
         // Older dates - show month abbreviation and year
         return "Played on " + Qt.formatDate(lastPlayed, "MMM. yyyy");
+    }
+
+    // Helper function to format dateAdded date
+    function formatDateAdded(lastPlayed: string): string {
+        // Never Played
+        if (!lastPlayed) {
+            return "xxx";
+        }
+
+        const playedDate = new Date(lastPlayed);
+        const today = new Date();
+
+        // Reset time components to compare dates only
+        today.setHours(0, 0, 0, 0);
+        playedDate.setHours(0, 0, 0, 0);
+
+        // Calculate difference in days
+        const diffTime = today - playedDate;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        // Configuration
+        const RECENT_DAYS_THRESHOLD = 30;
+
+        // Default year is 1970 -> not played
+        if (playedDate.getFullYear() == 1970) {
+            return "1970xxx";
+        }
+
+        // Today
+        if (diffDays === 0) {
+            return "Added Today";
+        }
+
+        // Yesterday
+        if (diffDays === 1) {
+            return "Added Yesterday";
+        }
+
+        // Recent days (within threshold)
+        if (diffDays < RECENT_DAYS_THRESHOLD) {
+            return "Added " + diffDays + " days ago";
+        }
+
+        // Older dates - show month abbreviation and year
+        return "Added on " + Qt.formatDate(lastPlayed, "MMM. yyyy");
     }
 }

@@ -1,87 +1,38 @@
 import QtQuick
 import QtQuick.Layouts 1.15
 import QtQuick.Effects
+import QtCharts
 
 Rectangle {
     width: ListView.view.width
-    height: Theme.listViewCardHeight+Theme.listViewCardVerticalMargin*2
+    height: Theme.listViewCardHeight + Theme.listViewCardBottomMargin + Theme.listViewCardTopMargin
     color: "transparent"
 
     Rectangle {
-        id: listCard
+        id: card
         anchors.fill: parent
         anchors.leftMargin: Theme.listViewCardHorizontalMargin
         anchors.rightMargin: Theme.listViewCardHorizontalMargin
-        anchors.bottomMargin: Theme.listViewCardVerticalMargin
-        anchors.topMargin: Theme.listViewCardVerticalMargin
-        color: Theme.listViewCardColor
+        anchors.bottomMargin: Theme.listViewCardBottomMargin
+        anchors.topMargin: Theme.listViewCardTopMargin
+        // color: isHovered? Theme.listViewCardColorHover : Theme.listViewCardColor
+        color: "transparent"
         radius: Theme.listViewCardRadius
         border.color: Theme.searchBarBorderColorFocused
         border.width: Theme.searchBarBorderWidth
-
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled: true
-            shadowHorizontalOffset: 0
-            shadowVerticalOffset: Theme.searchBarShadowOffset
-            shadowBlur: Theme.searchBarShadowBlur
-            shadowColor: Theme.searchBarShadowColor
-        }
-
-        // States for hover/press
         state: "default"
 
-        states: [
-            State {
-                name: "default"
-                PropertyChanges {
-                    target: listCard
-                    color: Theme.listViewCardColor
-                }
-            },
-            State {
-                name: "hovered"
-                PropertyChanges {
-                    target: listCard
-                    color: Theme.listViewCardHoverBackgroundColor
-                }
-                PropertyChanges {
-                    target: launchButton
-                    color: "red"
-                }
-            },
-            State {
-                name: "pressed"
-                PropertyChanges {
-                    target: listCard
-                    color: Theme.listViewCardColor
-                }
-            }
-        ]
-
-        transitions: [
-            Transition {
-                from: "*"
-                to: "*"
-                ColorAnimation {
-                    duration: 150
-                    easing.type: Easing.OutQuad
-                }
-            }
-        ]
+        property bool isHovered: cardMouseArea.containsMouse || editButton.hovered || coverImageMouseArea.containsMouse
 
         Row {
             anchors.fill: parent
-            anchors.margins: 12
-            spacing: 16
 
-            // Game poster/image on the left
+            // Game poster
             Rectangle {
+                id: coverImage
                 width: 200
                 height: 300
-                radius: Theme.listViewCardRadius
                 color: "#1a1a1a"
-                clip: true
 
                 RoundedImage {
                     anchors.fill: parent
@@ -91,208 +42,214 @@ Rectangle {
                     radius: Theme.listViewCardRadius
                 }
 
-                // Fallback
-                Text {
-                    anchors.centerIn: parent
-                    text: modelData.name.charAt(0).toUpperCase()
-                    font.pixelSize: 32
-                    font.bold: true
-                    color: "#444"
-                    visible: modelData.posterUrl === ""
-                }
-            }
-
-            // Game info (name and metadata)
-            Column {
-                width: parent.width - 200 - 140 - 32 // Remaining space
-                anchors.top: parent.top
-                spacing: 8
-
-                // Game name
-                Text {
-                    width: parent.width
-                    text: modelData.name
-                    font.pixelSize: 18
-                    font.bold: true
-                    color: "white"
-                    elide: Text.ElideRight
-                }
-
-                // Metadata row
-                Row {
-                    spacing: 16
-
-                    // Playtime
-                    Row {
-                        spacing: 6
-
-                        Text {
-                            text: "⏱"
-                            font.pixelSize: 12
-                            color: "#888"
-                        }
-                        Text {
-                            text: Utils.formatPlaytime(modelData.totalPlaytimeSec)
-                            font.pixelSize: 13
-                            color: "#aaa"
-                        }
-                    }
-
-                    // Separator
-                    Text {
-                        text: "•"
-                        font.pixelSize: 13
-                        color: "#555"
-                    }
-
-                    // Last played
-                    Row {
-                        spacing: 6
-
-                        Text {
-                            text: "📅"
-                            font.pixelSize: 12
-                            color: "#888"
-                        }
-                        Text {
-                            text: Utils.formatLastPlayed(modelData.lastPlayed)
-                            font.pixelSize: 13
-                            color: "#aaa"
-                        }
-                    }
-
-                    // Separator
-                    Text {
-                        text: "•"
-                        font.pixelSize: 13
-                        color: "#555"
-                    }
-
-                    // Date added
-                    // Text {
-                    //     text: "Added " + Qt.formatDate(modelData.dateAdded,
-                    //                                    "M/d/yyyy")
-                    //     font.pixelSize: 13
-                    //     color: "#aaa"
-                    // }
-                }
-            }
-
-            // Spacer to push button to the right
-            Item {
-                width: 1
-                Layout.fillWidth: true
-            }
-
-            // Launch button
-            Rectangle {
-                id: launchButton
-                width: Theme.listViewCardLaunchButtonWidth
-                height: Theme.listViewCardLaunchButtonHeight
-                radius: Theme.listViewCardLaunchButtonRadius
-                color: Theme.listViewCardLaunchButtonColor
-                anchors.verticalCenter: parent.verticalCenter
-                z:103
-
-                // Button states
-                state: "default"
-
-                states: [
-                    State {
-                        name: "default"
-                        PropertyChanges {
-                            target: launchButton
-                            color: Theme.listViewCardLaunchButtonColor
-                        }
-                    },
-                    State {
-                        name: "hovered"
-                        PropertyChanges {
-                            target: launchButton
-                            color: Theme.listViewCardLaunchButtonHoverColor
-                        }
-                    },
-                    State {
-                        name: "pressed"
-                        PropertyChanges {
-                            target: launchButton
-                            color: Theme.listViewCardLaunchButtonPressedColor
-                        }
-                        PropertyChanges {
-                            target: launchButton
-                            scale: Theme.listViewCardLaunchButtonScale
-                        }
-                    }
-                ]
-
-                transitions: [
-                    Transition {
-                        from: "*"
-                        to: "*"
-                        ColorAnimation {
-                            duration: 150
-                        }
-                        NumberAnimation {
-                            properties: "scale"
-                            duration: 100
-                            easing.type: Easing.OutQuad
-                        }
-                    }
-                ]
-
-                Row {
-                    anchors.centerIn: parent
-                    spacing: 6
-
-                    Text {
-                        text: "▶"
-                        font.pixelSize: 12
-                        color: "white"
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    Text {
-                        text: "Launch"
-                        font.pixelSize: 14
-                        font.bold: true
-                        color: "white"
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                }
-
                 MouseArea {
+                    id: coverImageMouseArea
                     anchors.fill: parent
                     hoverEnabled: true
-                    z:104
-                    cursorShape: Qt.PointingHandCursor
+                    propagateComposedEvents: true
+                    z: 55
 
-                    onEntered: launchButton.state = "hovered"
-                    onExited: launchButton.state = "default"
-                    onPressed: launchButton.state = "pressed"
-                    onReleased: launchButton.state = containsMouse ? "hovered" : "default"
+                    onEntered: card.state = "hovered"
+                    onExited: card.state = "default"
+                    cursorShape: "PointingHandCursor"
 
                     onClicked: {
-                        console.log("Launch game:", modelData.name)
-                        gameManager.launchGame(modelData.name)
+                        console.log("Clicked row:", modelData.name);
+                        gameManager.launchGame(modelData.name);
                     }
                 }
+
+                // BG Bar 1
+                // This bar is a hacky solution to make the right of the image and left of the info box not round!
+                // I'm doing this because per corner radius is not supported in QML
+                Rectangle {
+                    width: Theme.listViewCardRadius
+                    height: parent.height
+                    color: card.isHovered ? Theme.listViewCardColorHover : Theme.listViewCardColor
+                    anchors.right: parent.right
+                }
             }
-        }
 
-        // Card hover detection
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: false
-            propagateComposedEvents: true
-            z:55
+            // Game info box
+            Rectangle {
+                id: infobox
+                width: parent.width - coverImage.width //  + Theme.listViewCardRadius
+                height: parent.height
+                color: card.isHovered ? Theme.listViewCardColorHover : Theme.listViewCardColor
+                radius: Theme.listViewCardRadius
 
-            onEntered: listCard.state = "hovered"
-            onExited: listCard.state = "default"
-            onPressed: mouse.accepted = false // Let button handle clicks
+                // BG Bar 2
+                // This bar is a hacky solution to make the right of the image and left of the info box not round!
+                // I'm doing this because per corner radius is not supported in QML
+                Rectangle {
+                    width: Theme.listViewCardRadius
+                    height: parent.height
+                    color: card.isHovered ? Theme.listViewCardColorHover : Theme.listViewCardColor
+                    anchors.left: parent.left
+                }
 
-            onClicked: {
-                console.log("Clicked row:", modelData.name)
-                // Optional: Select/highlight row
+                // Edit Button
+                GHDToolButton {
+                    id: editButton
+                    toolTipText: "Edit information"
+                    iconSource: "qrc:/icons/icon_edit_2.svg"
+                    z: 10000
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    anchors.topMargin: Theme.listViewInfoboxPadding
+                    anchors.rightMargin: Theme.listViewInfoboxPadding + Theme.listViewCardRadius
+                    iconColor: Theme.toolButtonIconColor
+                    iconColorPressed: Theme.toolButtonPressedColor
+                    iconColorHovered: Theme.toolButtonHoveredColor
+
+                    onClicked: {
+                        var component = Qt.createComponent("../windows/AddGameWindow.qml"); // TODO: change to edit game window
+                        if (component.status === Component.Ready) {
+                            var win = component.createObject(null, {
+                                "visible": true
+                            });
+                            win.show();
+                        }
+                    }
+                }
+
+                // Game Title and subtitle
+                Column {
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.topMargin: Theme.listViewInfoboxPadding
+                    anchors.leftMargin: Theme.listViewInfoboxPadding
+                    Text {
+                        text: modelData.name
+                        font.pixelSize: Theme.listViewCardTitleSize
+                        font.bold: false
+                        color: Theme.listViewCardTitleColor
+                        elide: Text.ElideRight
+                        maximumLineCount: 2
+                        wrapMode: Text.Wrap
+                    }
+                    Text {
+                        text: Utils.formatPlaytime(modelData.totalPlaytimeSec)
+                        font.pixelSize: Theme.listViewCardSubtitleSize
+                        color: Theme.listViewCardSubtitleColor
+                        elide: Text.ElideRight
+                    }
+                }
+
+                // Extra Game info at the bottom left
+                Text {
+                    text: gameManager.getGameSessionCount(modelData.name) + " Sessions " + " | " + Utils.formatLastPlayed(modelData.lastPlayed) //+ " | " + Utils.formatDateAdded(modelData.dateAdded)
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.bottomMargin: Theme.listViewInfoboxPadding
+                    anchors.leftMargin: Theme.listViewInfoboxPadding
+                    color: Theme.listViewCardExtraInfoColor
+                    font.pixelSize: 12
+                }
+
+                // Extra Game info at the bottom right
+                Text {
+                    text: Utils.formatDateAdded(modelData.dateAdded)
+                    anchors.bottom: parent.bottom
+                    anchors.right: parent.right
+                    anchors.bottomMargin: Theme.listViewInfoboxPadding
+                    anchors.rightMargin: Theme.listViewInfoboxPadding + Theme.listViewCardRadius
+                    color: Theme.listViewCardExtraInfoColor
+                    font.pixelSize: 12
+                }
+
+                // Card hover detection
+                MouseArea {
+                    id: cardMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+                    z: 55
+
+                    onEntered: card.state = "hovered"
+                    onExited: card.state = "default"
+                    cursorShape: "PointingHandCursor"
+
+                    onClicked: {
+                        console.log("Clicked row:", modelData.name);
+                        gameManager.launchGame(modelData.name);
+                    }
+                }
+
+                
+
+                // ChartView {
+                //     id: chartView
+
+                //     // Customization properties
+                //     antialiasing: true
+                //     backgroundColor: "#1a1a1a"
+                //     titleColor: "#ffffff"
+                //     legend.visible: false
+
+                //     // Remove default margins for cleaner look
+                //     margins.top: 0
+                //     margins.bottom: 0
+                //     margins.left: 0
+                //     margins.right: 0
+
+                //     BarSeries {
+                //         id: barSeries
+                //         axisX: BarCategoryAxis {
+                //             id: axisX
+                //             labelsColor: "#888888"
+                //             gridVisible: false
+                //         }
+                //         axisY: ValueAxis {
+                //             id: axisY
+                //             labelsColor: "#888888"
+                //             gridLineColor: "#333333"
+                //             titleText: "Hours Played"
+                //             // titleColor: "#ffffff"
+                //             min: 0
+                //         }
+
+                //         BarSet {
+                //             id: barSet
+                //             color: "#4CAF50"
+                //             borderColor: "#45a049"
+                //             borderWidth: 1
+                //         }
+                //     }
+
+                    // function loadData(gameName) {
+                    //     print("hi");
+                    //     var data = gameManager.getFakePast30DaysPlaytime(gameName);
+
+                    //     // Clear existing data
+                    //     barSet.remove(0, barSet.count);
+                    //     axisX.clear();
+
+                    //     // Find max value for Y axis
+                    //     var maxHours = 0;
+
+                    //     // Add new data
+                    //     for (var i = 0; i < data.length; i++) {
+                    //         var entry = data[i];
+                    //         barSet.append(entry.hours);
+                    //         axisX.append(entry.label);
+
+                    //         if (entry.hours > maxHours) {
+                    //             maxHours = entry.hours;
+                    //         }
+                    //     }
+
+                    //     // Set Y axis max with some padding
+                    //     axisY.max = Math.ceil(maxHours * 1.2);
+                    // }
+
+                    // Component.onCompleted: {
+                        // Example: load data for a specific game
+                        // loadData(modelData.name);
+                    // }
+                // }
+
+
             }
         }
     }

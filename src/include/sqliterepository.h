@@ -23,11 +23,23 @@ public:
 
     // Add or update games
     void addGame(const Game &game) override;
+    void removeGame(const QString &gameName) override;
     void updateGame(const Game &game) override;
 
     // Record session start and end
     void recordSessionStart(const QString &gameName) override;
     void recordSessionEnd(const QString &gameName, qint64 durationSec) override;
+
+    // Get stats
+    int getGameSessionCount(const QString &gameName) const override;
+    qint64 getGameMaxSessionDuration(const QString &gameName) const override;
+
+    // struct DailyPlaytime {
+    //     QString date;      // YYYY-MM-DD format
+    //     qint64 seconds;    // Total seconds played that day
+    // };
+
+    QVector<DailyPlaytime> getPast30DaysPlaytime(const QString &gameName) const override;
 
 private:
     QSqlDatabase m_db;
