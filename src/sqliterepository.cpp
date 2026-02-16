@@ -109,6 +109,17 @@ void SQLiteRepository::addGame(const Game &game)
     }
 }
 
+// Remove a game from the database
+void SQLiteRepository::removeGame(const QString &gameName) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM games WHERE name = ?");
+    query.addBindValue(gameName);
+    
+    if (!query.exec()) {
+        qCritical() << "Failed to remove game:" << query.lastError().text();
+    }
+}
+
 // Update an existing game (stats like playtime / lastPlayed)
 void SQLiteRepository::updateGame(const Game &game)
 {

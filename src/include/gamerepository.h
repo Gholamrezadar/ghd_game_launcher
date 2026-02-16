@@ -21,6 +21,7 @@ public:
 
     // Persist changes
     virtual void addGame(const Game &game) = 0;
+    virtual void removeGame(const QString &gameName) = 0;
     virtual void updateGame(const Game &game) = 0;
 
     // Session-related persistence (later expanded)

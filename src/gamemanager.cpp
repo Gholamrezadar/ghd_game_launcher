@@ -172,9 +172,21 @@ void GameManager::addGame(const QString &name, const QString &exePath, const QSt
 }
 
 // Remove a game from the library
-void GameManager::removeGame(const QString &name, const QString &exePath, const QString &posterUrl)
+void GameManager::removeGame(const QString &name)
 {
-    //TODO: implement
+    // Find and remove from in-memory list
+    for(int i = 0; i < m_games.size(); ++i) {
+        if(m_games[i].name == name) {
+            qInfo() << "Removing game:" << name;
+            m_games.removeAt(i);
+            // Remove from database
+            m_repository->removeGame(name);
+            // Notify the UI
+            emit gamesChanged();
+            return;
+        }
+    }
+    qWarning() << "Game" << name << "not found, cannot remove";
 }
 
 // Update info about a game

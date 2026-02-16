@@ -3,7 +3,7 @@ import QtQuick
 
 QtObject {
     // Helper function to format playtime
-    function formatPlaytime(seconds: Number) {
+    function formatPlaytime(seconds: int): string {
         if (seconds === 0)
             return "Not played";
 
@@ -20,7 +20,7 @@ QtObject {
     }
 
     // Helper function to format lastPlayed date
-    function formatLastPlayed(lastPlayed) {
+    function formatLastPlayed(lastPlayed: int): string{
         // Never Played
         if (!lastPlayed){
             return "Never Played";

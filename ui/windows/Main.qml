@@ -14,19 +14,6 @@ ApplicationWindow {
     Universal.theme: Universal.Dark
     color: Theme.backgroundColor
 
-    Component.onCompleted: {
-        print("Games:")
-        for(let i = 0; i < 100; i++) {
-            print("Name:", gameManager.displayGames[i].name)
-            print("Poster:", gameManager.displayGames[i].posterUrl)
-            print("totalPlaytimeSec:", gameManager.displayGames[i].totalPlaytimeSec)
-            print("playtimeMin:", gameManager.displayGames[i].playtimeMin)
-            print("lastPlayed:", gameManager.displayGames[i].lastPlayed)
-            print("dateAdded:", gameManager.displayGames[i].dateAdded)
-            print()
-        }
-    }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -68,7 +55,7 @@ ApplicationWindow {
                     // anchors.margins: 100
 
                     clip: true
-                    model: gameManager.displayGames
+                    model: gameManager?.displayGames
 
                     // center children horizontally
                     property int columns: Math.floor(width / cellWidth)

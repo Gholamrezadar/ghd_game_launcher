@@ -23,6 +23,7 @@ public:
 
     // Add or update games
     void addGame(const Game &game) override;
+    void removeGame(const QString &gameName) override;
     void updateGame(const Game &game) override;
 
     // Record session start and end
