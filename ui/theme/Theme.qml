@@ -30,7 +30,9 @@ QtObject {
 
     // ToolButton
     readonly property color toolButtonIconColor: Qt.rgba(1, 1, 1, 0.6)
-    readonly property color toolButtonIconColorMute: Qt.rgba(1, 1, 1, 0.2)
+    readonly property color toolButtonIconColorMute: Qt.rgba(1, 1, 1, 0.15)
+    readonly property color toolButtonIconColorAsc: Qt.rgba(0.56, 0.71, 0.93, 0.45)
+    readonly property color toolButtonIconColorDesc: Qt.rgba(0.93, 0.56, 0.58, 0.45)
     readonly property color toolButtonPressedColor: Qt.rgba(1, 1, 1, 0.05)
     readonly property color toolButtonHoveredColor: Qt.rgba(1, 1, 1, 0.08)
 

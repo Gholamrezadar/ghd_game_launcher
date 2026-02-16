@@ -1,9 +1,15 @@
+<!DOCTYPE RCC>
 <RCC>
-    <qresource prefix="/">
-        <file>icons/icon_list_view.svg</file>
-        <file>icons/icon_grid_view.svg</file>
-        <file>icons/icon_grid_view_outline.svg</file>
-        <file>icons/icon_add.svg</file>
-        <file>icons/icon_sort.svg</file>
-    </qresource>
+  <qresource prefix="/">
+    <file>icons/icon_list_view.svg</file>
+    <file>icons/icon_grid_view.svg</file>
+    <file>icons/icon_grid_view_outline.svg</file>
+    <file>icons/icon_add.svg</file>
+    <file>icons/icon_sort.svg</file>
+    <file>icons/icon_stopwatch.svg</file>
+    <file>icons/icon_calendar_3.svg</file>
+    <file>icons/icon_calendar_2.svg</file>
+    <file>icons/icon_calendar_1.svg</file>
+    <file>icons/icon_install_date.svg</file>
+  </qresource>
 </RCC>

@@ -10,19 +10,24 @@ QtObject {
         var hours = Math.floor(seconds / 3600);
         var minutes = Math.floor((seconds % 3600) / 60);
 
-        if (hours == 0) {
-           return minutes + " Minutes";
+        if (hours == 0 && minutes == 1) {
+            return "1 Minute";
         }
-        else if (hours == 1)
+        if (hours == 0 && minutes > 1) {
+            return minutes + " Minutes";
+        }
+        if (hours == 1) {
             return "1 Hour";
-        else
+        }
+        if (hours > 1) {
             return hours + " Hours";
+        }
     }
 
     // Helper function to format lastPlayed date
-    function formatLastPlayed(lastPlayed: int): string{
+    function formatLastPlayed(lastPlayed: int): string {
         // Never Played
-        if (!lastPlayed){
+        if (!lastPlayed) {
             return "Never Played";
         }
 

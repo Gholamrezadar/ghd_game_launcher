@@ -80,9 +80,10 @@ Rectangle {
 
             // Sort Button 1
             GHDToolButton {
+                toolTipText: "Sort by Time Played"
                 iconName: "sort"
-                iconSource: "qrc:/icons/icon_sort.svg"
-                iconColor: Theme.toolButtonIconColorMute
+                iconSource: "qrc:/icons/icon_stopwatch.svg"
+                iconColor: gameManager.sortMode != 0 ? Theme.toolButtonIconColorMute : checked ? Theme.toolButtonIconColorAsc : Theme.toolButtonIconColorDesc
                 iconColorPressed: Theme.toolButtonPressedColor
                 iconColorHovered: Theme.toolButtonHoveredColor
                 checkable: true
@@ -96,9 +97,10 @@ Rectangle {
 
             // Sort Button 2
             GHDToolButton {
+                toolTipText: "Sort by Last Played"
                 iconName: "sort"
-                iconSource: "qrc:/icons/icon_sort.svg"
-                iconColor: Theme.toolButtonIconColorMute
+                iconSource: "qrc:/icons/icon_calendar_1.svg"
+                iconColor: gameManager.sortMode != 1 ? Theme.toolButtonIconColorMute : checked ? Theme.toolButtonIconColorAsc : Theme.toolButtonIconColorDesc
                 iconColorPressed: Theme.toolButtonPressedColor
                 iconColorHovered: Theme.toolButtonHoveredColor
                 checkable: true
@@ -112,9 +114,10 @@ Rectangle {
 
             // Sort Button 3
             GHDToolButton {
+                toolTipText: "Sort by Date Added"
                 iconName: "sort"
-                iconSource: "qrc:/icons/icon_sort.svg"
-                iconColor: Theme.toolButtonIconColorMute
+                iconSource: "qrc:/icons/icon_install_date.svg"
+                iconColor: gameManager.sortMode != 2 ? Theme.toolButtonIconColorMute : checked ? Theme.toolButtonIconColorAsc : Theme.toolButtonIconColorDesc
                 iconColorPressed: Theme.toolButtonPressedColor
                 iconColorHovered: Theme.toolButtonHoveredColor
                 checkable: true
@@ -124,10 +127,12 @@ Rectangle {
                     gameManager.setSortMode(2)
                     gameManager.setAscending(checked)
                 }
+                
             }
 
             // Grid/List View Button
             GHDToolButton {
+                toolTipText: viewLoader.sourceComponent === gridViewComponent ? "List View" : "Grid View"
                 iconName: "list"
                 iconSource: viewLoader.sourceComponent === gridViewComponent ? "qrc:/icons/icon_list_view.svg" : "qrc:/icons/icon_grid_view_outline.svg"
                 iconColor: Theme.toolButtonIconColor
@@ -143,6 +148,7 @@ Rectangle {
 
             // Add Button
             GHDToolButton {
+                toolTipText: "Add Game"
                 iconName: "addl"
                 iconSource: "qrc:/icons/icon_add.svg"
                 iconColor: Theme.toolButtonIconColor

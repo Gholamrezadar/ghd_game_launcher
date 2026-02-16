@@ -29,6 +29,6 @@ public:
     virtual void recordSessionEnd(const QString &gameName, qint64 durationSec) = 0;
 
     // Get stats
-    int getGameSessionCount(const QString &gameName) const override;
-    qint64 getGameMaxSessionDuration(const QString &gameName) const override;
+    virtual int getGameSessionCount(const QString &gameName) const = 0;
+    virtual qint64 getGameMaxSessionDuration(const QString &gameName) const = 0;
 };

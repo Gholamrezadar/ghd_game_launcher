@@ -57,7 +57,7 @@ private:
     QVector<Game> m_games;
     QVector<Game> m_displayGames; // A proxy model for m_games that is filtered and sorted for the ui to display
 
-    int m_sortIndex = 0;
+    int m_sortIndex = 1;
     bool m_isAscending = true;
     QString m_filterText = "";
 

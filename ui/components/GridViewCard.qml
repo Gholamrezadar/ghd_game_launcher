@@ -54,7 +54,7 @@ Rectangle {
                 name: "hovered"
                 PropertyChanges {
                     target: overlay
-                    opacity: 0.7
+                    opacity: 1.0
                 }
                 PropertyChanges {
                     target: gameInfo
@@ -119,7 +119,18 @@ Rectangle {
         Rectangle {
             id: overlay
             anchors.fill: parent
-            color: Theme.gridViewCardHoverBackgroundColor
+            // color: Theme.gridViewCardHoverBackgroundColor
+            // color: "transparent"
+            gradient: Gradient {
+                GradientStop {
+                    position: 0.0
+                    color: "transparent"
+                }
+                GradientStop {
+                    position: 1.0
+                    color: Qt.rgba(0, 0, 0, 0.9)
+                }
+            }
             opacity: 0.0
             radius: Theme.gridViewCardRadius
         }

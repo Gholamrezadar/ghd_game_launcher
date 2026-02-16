@@ -9,6 +9,7 @@ ToolButton {
     property alias iconColor: root.icon.color
     property alias iconWidth: root.icon.width
     property alias iconHeight: root.icon.height
+    property alias toolTipText: tooltip.text
 
     property color iconColorPressed: "#272727"
     property color iconColorHovered: "#333"
@@ -54,5 +55,22 @@ ToolButton {
                 }
             }
         ]
+    }
+
+    ToolTip{
+        id: tooltip
+        visible: toolTipText != "" ? hoverHandler.hovered : false
+        y: -implicitHeight - 8
+        delay: 500
+        margins: 0
+        leftPadding: 12
+        rightPadding: 12
+        bottomPadding: 2
+        topPadding: 2
+        font.pixelSize: 12
+        background: Rectangle {
+            color: Qt.rgba(.2, .2, .2, 1)
+            radius: 9999
+        }
     }
 }
