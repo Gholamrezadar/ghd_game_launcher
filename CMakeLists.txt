@@ -15,12 +15,12 @@ find_package(Qt6 REQUIRED COMPONENTS Sql)
 qt_standard_project_setup(REQUIRES 6.8)
 
 # Icon setup
-set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/icons/favicon.rc")
+# set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/icons/favicon.rc")
 
 # Main Executable setup
 qt_add_executable(GHD_Launcher
     src/main.cpp
-    ${app_icon_resource_windows}
+    # ${app_icon_resource_windows}
 )
 
 # Include dirs
