@@ -103,12 +103,18 @@ Rectangle {
                     iconColorHovered: Theme.toolButtonHoveredColor
 
                     onClicked: {
-                        var component = Qt.createComponent("../windows/AddGameWindow.qml"); // TODO: change to edit game window
+                        var component = Qt.createComponent("../windows/EditGameWindow.qml")
                         if (component.status === Component.Ready) {
                             var win = component.createObject(null, {
-                                "visible": true
-                            });
-                            win.show();
+                                visible: true,
+                                game: {
+                                    name:             modelData.name,
+                                    exePath:          modelData.executablePath,
+                                    posterUrl:        modelData.posterUrl,
+                                    totalPlaytimeSec: modelData.totalPlaytimeSec
+                                }
+                            })
+                            win.show()
                         }
                     }
                 }

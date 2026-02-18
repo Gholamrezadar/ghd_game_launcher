@@ -25,7 +25,10 @@ Rectangle {
         RoundedImage {
             id: posterImage
             anchors.fill: parent
-            source: "file:///" + modelData.posterUrl || ""
+            source: modelData.posterUrl.startsWith("file:///")
+            ? modelData.posterUrl
+            : "file:///" + modelData.posterUrl
+                
             fillMode: Image.PreserveAspectCrop
             visible: modelData.posterUrl !== ""
             radius: Theme.gridViewCardRadius
@@ -54,11 +57,18 @@ Rectangle {
             }
 
             onClicked: {
-                var component = Qt.createComponent("../windows/AddGameWindow.qml") // TODO: change to edit game window
+                print("Editing", modelData.name)
+                var component = Qt.createComponent("../windows/EditGameWindow.qml")
                 if (component.status === Component.Ready) {
                     var win = component.createObject(null, {
-                                                         "visible": true
-                                                     })
+                        visible: true,
+                        game: {
+                            name:             modelData.name,
+                            exePath:          modelData.executablePath,
+                            posterUrl:        modelData.posterUrl,
+                            totalPlaytimeSec: modelData.totalPlaytimeSec
+                        }
+                    })
                     win.show()
                 }
             }

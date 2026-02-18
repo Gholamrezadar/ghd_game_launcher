@@ -283,15 +283,14 @@ void GameManager::rebuildDisplayGames()
               [&](const Game &a, const Game &b) {
                   bool less = false;
                   switch (m_sortIndex) {
-                      //TODO: implement actual sort strategies
                   case 0:
-                      less = a.totalPlaytimeSec < b.totalPlaytimeSec;
+                      less = a.totalPlaytimeSec > b.totalPlaytimeSec; // flipped the sign for ux reasons
                       break;
                   case 1:
                       less = a.lastPlayed < b.lastPlayed;
                       break;
                   case 2:
-                      less = a.dateAdded < b.dateAdded;
+                      less = a.dateAdded > b.dateAdded; // flipped the sign for ux reasons
                       break;
                   case 3:
                       less = a.name < b.name;
@@ -349,8 +348,6 @@ QVariantList GameManager::getPast30DaysPlaytime(const QString &name) const
     return result;
 }
 
-// Add to gamemanager.cpp
-// Add to gamemanager.cpp
 #include <random>
 
 QVariantList GameManager::getFakePast30DaysPlaytime(const QString &name) const

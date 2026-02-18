@@ -29,7 +29,7 @@ QtObject {
     // Helper function to format lastPlayed date
     function formatLastPlayed(lastPlayed: string): string {
         // Never Played
-        if (!lastPlayed) {
+        if (!lastPlayed || lastPlayed == "Never") {
             return "Never Played";
         }
 
@@ -49,7 +49,7 @@ QtObject {
 
         // Default year is 1970 -> not played
         if (playedDate.getFullYear() == 1970) {
-            return "Not Played";
+            return "Never Played";
         }
 
         // Today
