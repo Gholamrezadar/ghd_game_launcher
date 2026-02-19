@@ -38,8 +38,6 @@ int main(int argc, char *argv[])
     gameManager.addGame("Hollow Knight 4", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_hk.png");
     gameManager.addGame("Hollow Knight: Silksong 4", "D:\\Games\\Hades I\\x64\\Hades.exe", "C:\\Users\\EXO\\Pictures\\poster_silksong.png");
 
-    // TODO: need removeGame and updateGame
-
     engine.loadFromModule("ghd_game_launcher", "Main");
     // engine.loadFromModule("ghd_game_launcher", "Testing");
 
