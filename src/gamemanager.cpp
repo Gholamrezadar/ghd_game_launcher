@@ -103,10 +103,15 @@ void GameManager::launchGame(const QString &name)
 
     Game &game = m_games[index];
 
+    // Remove file:/// if it exists
+    QString fixedExePath = game.executablePath;
+    if (fixedExePath.startsWith("file:///"))
+        fixedExePath = fixedExePath.mid(8);
+
     auto *session = new GameSession(
         index,
         game.name,
-        game.executablePath,
+        fixedExePath,
         this);
 
     // Record session start in DB immediately

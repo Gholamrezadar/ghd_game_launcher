@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts 1.15
 import QtQuick.Effects
-import QtGraphs
+// import QtGraphs
 
 Rectangle {
     width: ListView.view.width
@@ -36,7 +36,9 @@ Rectangle {
 
                 RoundedImage {
                     anchors.fill: parent
-                    source: modelData.posterUrl ? "file:///" + modelData.posterUrl : ""
+                    source: modelData.posterUrl.startsWith("file:///")
+                            ? modelData.posterUrl
+                            : "file:///" + modelData.posterUrl
                     fillMode: Image.PreserveAspectCrop
                     visible: modelData.posterUrl !== ""
                     radius: Theme.listViewCardRadius
@@ -186,52 +188,52 @@ Rectangle {
                 }
 
                 
-                GraphsView {
-                    // anchors.fill: parent
-                    z:1
-                    height:200
-                    width: parent.width
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 24
-                    theme: GraphsTheme {
-                             colorScheme: GraphsTheme.ColorScheme.Dark
-                             seriesColors: ["#E0D080", "#B0A060"]
-                             borderColors: ["#807040", "#706030"]
-                             grid.mainColor: "#34ccccff"
-                             grid.subColor: "#34eeeeff"
-                             axisY.mainColor: "#39ccccff"
-                             axisY.subColor: "#39eeeeff"
-                             backgroundColor: "transparent"
-                             plotAreaBackgroundVisible: false
-                         }
-                    axisX: ValueAxis {
-                        max: 3
-                    }
-                    axisY: ValueAxis {
-                        max: 3
-                    }
+                // GraphsView {
+                //     // anchors.fill: parent
+                //     z:1
+                //     height:200
+                //     width: parent.width
+                //     anchors.horizontalCenter: parent.horizontalCenter
+                //     anchors.bottom: parent.bottom
+                //     anchors.bottomMargin: 24
+                //     theme: GraphsTheme {
+                //              colorScheme: GraphsTheme.ColorScheme.Dark
+                //              seriesColors: ["#E0D080", "#B0A060"]
+                //              borderColors: ["#807040", "#706030"]
+                //              grid.mainColor: "#34ccccff"
+                //              grid.subColor: "#34eeeeff"
+                //              axisY.mainColor: "#39ccccff"
+                //              axisY.subColor: "#39eeeeff"
+                //              backgroundColor: "transparent"
+                //              plotAreaBackgroundVisible: false
+                //          }
+                //     axisX: ValueAxis {
+                //         max: 3
+                //     }
+                //     axisY: ValueAxis {
+                //         max: 3
+                //     }
 
-                    LineSeries {
-                        color: "cyan"
-                        XYPoint {
-                            x: 0.5
-                            y: 0.5
-                        }
-                        XYPoint {
-                            x: 1
-                            y: 1
-                        }
-                        XYPoint {
-                            x: 2
-                            y: 2
-                        }
-                        XYPoint {
-                            x: 2.5
-                            y: 1.5
-                        }
-                    }
-                }
+                //     LineSeries {
+                //         color: "cyan"
+                //         XYPoint {
+                //             x: 0.5
+                //             y: 0.5
+                //         }
+                //         XYPoint {
+                //             x: 1
+                //             y: 1
+                //         }
+                //         XYPoint {
+                //             x: 2
+                //             y: 2
+                //         }
+                //         XYPoint {
+                //             x: 2.5
+                //             y: 1.5
+                //         }
+                //     }
+                // }
 
                 // ChartView {
                 //     id: chartView

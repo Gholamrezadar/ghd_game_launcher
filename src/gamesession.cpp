@@ -1,6 +1,7 @@
 #include "gamesession.h"
 
 #include <QDebug>
+#include <QFileInfo>
 
 GameSession::GameSession(int gameId,
                          const QString &gameName,
@@ -43,6 +44,7 @@ void GameSession::start()
                  << error;
     });
 
+    m_process->setWorkingDirectory(QFileInfo(m_executablePath).absolutePath());
     m_process->start(m_executablePath);
 }
 

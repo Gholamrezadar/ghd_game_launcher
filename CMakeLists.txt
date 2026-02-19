@@ -9,7 +9,6 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Sql)
-find_package(Qt6 REQUIRED COMPONENTS Graphs)
 
 
 qt_standard_project_setup(REQUIRES 6.8)
@@ -89,7 +88,7 @@ set_target_properties(GHD_Launcher PROPERTIES
 
 # Link against dependencies
 target_link_libraries(GHD_Launcher
-    PRIVATE Qt6::Quick Qt6::Sql Qt6::Core Qt6::Graphs
+    PRIVATE Qt6::Quick Qt6::Sql Qt6::Core
 )
 
 # Define default install dir for bin and lib files (cross-platform)
