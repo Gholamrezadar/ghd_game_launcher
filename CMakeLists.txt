@@ -61,6 +61,7 @@ qt_add_qml_module(GHD_Launcher
         ui/windows/Main.qml
         ui/windows/Testing.qml
         ui/windows/AddGameWindow.qml
+        ui/windows/EditGameWindow.qml
 
         # Components
         ui/components/RoundedImage.qml
