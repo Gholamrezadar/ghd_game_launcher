@@ -10,7 +10,7 @@ ApplicationWindow {
     width: 400
     height: 200
     visible: true
-    title: "Add New"
+    title: "Add Game"
 
     // Bg
     Rectangle {
@@ -33,7 +33,7 @@ ApplicationWindow {
                 GHDTextField {
                     id: nameInput
                     Layout.fillWidth: true
-                    placeholderText: "Enter your name"
+                    placeholderText: "Name"
                     backgroundColor: "#2c2c2c"
                     backgroundColorFocused: "#333333"
                     textColor: "#ffffff"
@@ -48,11 +48,11 @@ ApplicationWindow {
             RowLayout {
                 spacing: 10
                 Label {
-                    text: "File:    "
+                    text: "Exe:    "
                     Layout.alignment: Qt.AlignVCenter
                 }
                 GHDTextField {
-                    id: fileInput
+                    id: exeFileInput
                     Layout.fillWidth: true
                     placeholderText: "Select a file..."
                     backgroundColor: "#2c2c2c"
@@ -65,6 +65,37 @@ ApplicationWindow {
                     readOnly: true
                 }
                 
+                GHDButton {
+                    backgroundColor: '#34db87'
+                    backgroundColorHovered: '#29b96a'
+                    backgroundColorPressed: '#218c41'
+                    textColor: "#ffffff"
+                    text: "Browse"
+                    onClicked: fileDialog.open()
+                }
+            }
+
+            // File Picker Field
+            RowLayout {
+                spacing: 10
+                Label {
+                    text: "Cover:    "
+                    Layout.alignment: Qt.AlignVCenter
+                }
+                GHDTextField {
+                    id: coverFileInput
+                    Layout.fillWidth: true
+                    placeholderText: "Select a file..."
+                    backgroundColor: "#2c2c2c"
+                    backgroundColorFocused: "#333333"
+                    textColor: "#ffffff"
+                    placeholderColor: "#888888"
+                    borderColor: "#444444"
+                    borderColorFocused: "#3498db"
+                    radius: 6
+                    readOnly: true
+                }
+
                 GHDButton {
                     backgroundColor: '#34db87'
                     backgroundColorHovered: '#29b96a'
