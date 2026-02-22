@@ -194,7 +194,7 @@ Rectangle {
                     var arr   = []
                     var value = maxVal * 0.4
 
-                    for (var i = days; i >= 0; --i) {
+                    for (var i = days; i > 0; --i) {
                         var d = new Date(now)
                         d.setDate(d.getDate() - i)
                         d.setHours(0, 0, 0, 0)
@@ -209,7 +209,7 @@ Rectangle {
                 }
 
                 property var dataset60:  generateData(60, 8)
-                property var dataset30:  generateData(30, 5)
+                property var dataset10:  generateData(11, 5)
                 property var dataset7:   generateData(7,  3)
                 // Playtime Chart
                 GHDChart {
@@ -219,11 +219,11 @@ Rectangle {
                     anchors.fill: parent
                     anchors.margins: 32
 
-                    model:    gameManager.getPlaytimeChartData(modelData.name, 14)  // last 14 days
-                    // model: parent.dataset7
+                    model:    gameManager.getPlaytimeChartData(modelData.name, 11)  // last 14 days
+                    // model: parent.dataset10
                     plotMode: GHDChart.PlotMode.Bar
 
-                    title:    "Daily Playtime"
+                    title:    ""
                     yUnit:    "h"
                     xUnit:    "days ago"
 
@@ -231,7 +231,9 @@ Rectangle {
                     yMax:         0      // auto
                     yTickStep:    0      // auto
                     yDecimals:    1
-                    xTickCount:   6
+                    xTickCount:   parent.dataset10.length-1
+                    xTicksInterval: 1      // 1: Drop 1 tick, show 1 tick
+                    tickRotation: 30
 
                     lineWidth:    3
                     dotRadius:    4
@@ -240,125 +242,6 @@ Rectangle {
                     seriesColor:      "#3B82F6"
                     seriesHoverColor: "#60A5FA"
                 }
-
-                // GraphsView {
-                //     // anchors.fill: parent
-                //     z:1
-                //     height:200
-                //     width: parent.width
-                //     anchors.horizontalCenter: parent.horizontalCenter
-                //     anchors.bottom: parent.bottom
-                //     anchors.bottomMargin: 24
-                //     theme: GraphsTheme {
-                //              colorScheme: GraphsTheme.ColorScheme.Dark
-                //              seriesColors: ["#E0D080", "#B0A060"]
-                //              borderColors: ["#807040", "#706030"]
-                //              grid.mainColor: "#34ccccff"
-                //              grid.subColor: "#34eeeeff"
-                //              axisY.mainColor: "#39ccccff"
-                //              axisY.subColor: "#39eeeeff"
-                //              backgroundColor: "transparent"
-                //              plotAreaBackgroundVisible: false
-                //          }
-                //     axisX: ValueAxis {
-                //         max: 3
-                //     }
-                //     axisY: ValueAxis {
-                //         max: 3
-                //     }
-
-                //     LineSeries {
-                //         color: "cyan"
-                //         XYPoint {
-                //             x: 0.5
-                //             y: 0.5
-                //         }
-                //         XYPoint {
-                //             x: 1
-                //             y: 1
-                //         }
-                //         XYPoint {
-                //             x: 2
-                //             y: 2
-                //         }
-                //         XYPoint {
-                //             x: 2.5
-                //             y: 1.5
-                //         }
-                //     }
-                // }
-
-                // ChartView {
-                //     id: chartView
-
-                //     // Customization properties
-                //     antialiasing: true
-                //     backgroundColor: "#1a1a1a"
-                //     titleColor: "#ffffff"
-                //     legend.visible: false
-
-                //     // Remove default margins for cleaner look
-                //     margins.top: 0
-                //     margins.bottom: 0
-                //     margins.left: 0
-                //     margins.right: 0
-
-                //     BarSeries {
-                //         id: barSeries
-                //         axisX: BarCategoryAxis {
-                //             id: axisX
-                //             labelsColor: "#888888"
-                //             gridVisible: false
-                //         }
-                //         axisY: ValueAxis {
-                //             id: axisY
-                //             labelsColor: "#888888"
-                //             gridLineColor: "#333333"
-                //             titleText: "Hours Played"
-                //             // titleColor: "#ffffff"
-                //             min: 0
-                //         }
-
-                //         BarSet {
-                //             id: barSet
-                //             color: "#4CAF50"
-                //             borderColor: "#45a049"
-                //             borderWidth: 1
-                //         }
-                //     }
-
-                    // function loadData(gameName) {
-                    //     print("hi");
-                    //     var data = gameManager.getFakePast30DaysPlaytime(gameName);
-
-                    //     // Clear existing data
-                    //     barSet.remove(0, barSet.count);
-                    //     axisX.clear();
-
-                    //     // Find max value for Y axis
-                    //     var maxHours = 0;
-
-                    //     // Add new data
-                    //     for (var i = 0; i < data.length; i++) {
-                    //         var entry = data[i];
-                    //         barSet.append(entry.hours);
-                    //         axisX.append(entry.label);
-
-                    //         if (entry.hours > maxHours) {
-                    //             maxHours = entry.hours;
-                    //         }
-                    //     }
-
-                    //     // Set Y axis max with some padding
-                    //     axisY.max = Math.ceil(maxHours * 1.2);
-                    // }
-
-                    // Component.onCompleted: {
-                        // Example: load data for a specific game
-                        // loadData(modelData.name);
-                    // }
-                // }
-
 
             }
         }

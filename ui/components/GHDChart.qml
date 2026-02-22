@@ -42,6 +42,11 @@ Item {
 
     // X axis — how many tick labels to show (evenly spaced)
     property int  xTickCount:   7
+    // X axis — label skipping: 0=show all, 1=show every 2nd, 4=show every 5th
+    // When >=0, this overrides xTickCount behavior
+    property int xTicksInterval: 0
+    // X axis label rotation in degrees (0 = horizontal, -45 = tilted up-left)
+    property real tickRotation: 0
 
     // Margins
     property int marginLeft:    70
@@ -100,6 +105,22 @@ Item {
     onDotRadiusChanged:       canvas.requestPaint()
     onBarFillRatioChanged:    canvas.requestPaint()
     onBarMinWidthChanged:     canvas.requestPaint()
+    onXTicksIntervalChanged: canvas.requestPaint()
+    onTickRotationChanged: canvas.requestPaint()
+
+    // ── Helper: draw rotated label ────────────────────────────────
+    function drawRotatedLabel(ctx, text, x, y, rotationDeg, align, color, font) {
+        ctx.save()
+        ctx.fillStyle = color
+        ctx.font = font
+        ctx.textAlign = align
+        ctx.textBaseline = "top"  // anchor at top for predictable rotation
+        
+        ctx.translate(x, y)
+        ctx.rotate(rotationDeg * Math.PI / 180)
+        ctx.fillText(text, 0, 0)
+        ctx.restore()
+    }
 
     Canvas {
         id: canvas
@@ -177,31 +198,54 @@ Item {
             var spanMs  = maxX - minX
             var spanDay = spanMs / 86400000
 
+            // ── X axis ticks + labels ────────────────────────────────────────
             ctx.textAlign = "center"
 
-            for (var ti = 0; ti <= root.xTickCount; ++ti) {
-                var frac   = ti / root.xTickCount
-                var tMs    = minX + frac * spanMs
-                var tx     = mapX(tMs)
-                var daysFromEnd = Math.round((maxX - tMs) / 86400000)
+            if (root.xTicksInterval >= 0 && pts.length > 0) {
+                // New behavior: label by data-point index with skipping
+                var step = root.xTicksInterval + 1  // 0→1 (all), 1→2 (every 2nd), 4→5 (every 5th)
+                
+                for (var i = 0; i < pts.length; i += step) {
+                    var tMs = pts[i].x.getTime()
+                    var tx  = mapX(tMs)
+                    var daysFromEnd = Math.round((maxX - tMs) / 86400000)
 
-                ctx.strokeStyle = axisColor
-                ctx.lineWidth   = 1
-                ctx.beginPath()
-                ctx.moveTo(tx, baseY)
-                ctx.lineTo(tx, baseY + 5)
-                ctx.stroke()
+                    // Tick mark
+                    ctx.strokeStyle = axisColor
+                    ctx.lineWidth   = 1
+                    ctx.beginPath()
+                    ctx.moveTo(tx, baseY)
+                    ctx.lineTo(tx, baseY + 5)
+                    ctx.stroke()
 
-                ctx.fillStyle = root.tickLabelColor
-                var xLabel
-                if (daysFromEnd === 0)
-                    xLabel = "Today"
-                else if (spanDay <= 1)
-                    xLabel = daysFromEnd + "h ago"    // hour-scale fallback label
-                else
-                    xLabel = daysFromEnd + " " + root.xUnit
+                    // Label
+                    ctx.fillStyle = root.tickLabelColor
+                    var xLabel = (daysFromEnd === 0) ? "Today"
+                                : (spanDay <= 1) ? daysFromEnd + "h ago"
+                                : daysFromEnd + " " + root.xUnit
+                    ctx.fillText(xLabel, tx, baseY + root.fontSize + 6)
+                }
+            } else {
+                // Fallback: original time-based spacing via xTickCount
+                for (var ti = 0; ti <= root.xTickCount; ++ti) {
+                    var frac   = ti / root.xTickCount
+                    var tMs    = minX + frac * spanMs
+                    var tx     = mapX(tMs)
+                    var daysFromEnd = Math.round((maxX - tMs) / 86400000)
 
-                ctx.fillText(xLabel, tx, baseY + root.fontSize + 6)
+                    ctx.strokeStyle = axisColor
+                    ctx.lineWidth   = 1
+                    ctx.beginPath()
+                    ctx.moveTo(tx, baseY)
+                    ctx.lineTo(tx, baseY + 5)
+                    ctx.stroke()
+
+                    ctx.fillStyle = root.tickLabelColor
+                    var xLabel = (daysFromEnd === 0) ? "Today"
+                                : (spanDay <= 1) ? daysFromEnd + "h ago"
+                                : daysFromEnd + " " + root.xUnit
+                    ctx.fillText(xLabel, tx, baseY + root.fontSize + 6)
+                }
             }
 
             // ── Axes ─────────────────────────────────────────────────────────
@@ -217,7 +261,7 @@ Item {
             canvas._hitCache = []
 
             if (root.plotMode === GHDChart.PlotMode.Bar) {
-                var slotW = cW / pts.length
+                var slotW = pts.length > 1 ? cW / (pts.length - 1) : cW
                 var bW    = Math.max(root.barMinWidth, slotW * root.barFillRatio)
 
                 for (let i = 0; i < pts.length; ++i) {
