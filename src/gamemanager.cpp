@@ -292,7 +292,7 @@ void GameManager::rebuildDisplayGames()
                       less = a.totalPlaytimeSec > b.totalPlaytimeSec; // flipped the sign for ux reasons
                       break;
                   case 1:
-                      less = a.lastPlayed < b.lastPlayed;
+                      less = a.lastPlayed > b.lastPlayed; // flipped the sign for ux reasons
                       break;
                   case 2:
                       less = a.dateAdded > b.dateAdded; // flipped the sign for ux reasons
@@ -315,85 +315,6 @@ int GameManager::getGameSessionCount(const QString &name) const
 qint64 GameManager::getGameMaxSessionDuration(const QString &name) const
 {
     return m_repository->getGameMaxSessionDuration(name);
-}
-
-//TODO: remove
-QVariantList GameManager::getPast30DaysPlaytime(const QString &name) const
-{
-    QVariantList result;
-    
-    // Get raw data from repository
-    auto dailyData = m_repository->getPast30DaysPlaytime(name);
-    
-    // Create a map for quick lookup
-    QMap<QString, qint64> dataMap;
-    for (const auto &entry : dailyData) {
-        dataMap[entry.date] = entry.seconds;
-    }
-    
-    // Generate all 30 days (to show days with 0 playtime)
-    QDate today = QDate::currentDate();
-    
-    for (int i = 29; i >= 0; --i) {
-        QDate date = today.addDays(-i);
-        QString dateStr = date.toString("yyyy-MM-dd");
-        
-        qint64 seconds = dataMap.value(dateStr, 0);
-        double hours = seconds / 3600.0;
-        
-        QVariantMap entry;
-        entry["date"] = dateStr;
-        entry["label"] = date.toString("MM/dd"); // Short format for chart
-        entry["hours"] = hours;
-        entry["seconds"] = seconds;
-        
-        result.append(entry);
-    }
-    
-    return result;
-}
-
-#include <random>
-//TODO: remove
-QVariantList GameManager::getFakePast30DaysPlaytime(const QString &name) const
-{
-    qInfo() << "Fake data called";
-    Q_UNUSED(name);
-    
-    QVariantList result;
-    QDate today = QDate::currentDate();
-    
-    // Use C++11 random number generation
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> hoursDist(0.0, 5.0);
-    std::uniform_int_distribution<> chanceDist(0, 100);
-    
-    for (int i = 29; i >= 0; --i) {
-        QDate date = today.addDays(-i);
-        QString dateStr = date.toString("yyyy-MM-dd");
-        
-        // Generate random playtime between 0 and 5 hours
-        // Some days have no playtime (30% chance)
-        double hours = 0.0;
-        if (chanceDist(gen) > 30) {
-            hours = hoursDist(gen);
-        }
-        
-        qint64 seconds = static_cast<qint64>(hours * 3600);
-        
-        QVariantMap entry;
-        entry["date"] = dateStr;
-        entry["label"] = date.toString("MM/dd");
-        entry["hours"] = hours;
-        entry["seconds"] = seconds;
-        
-        result.append(entry);
-    }
-
-    qInfo() << "Fake data created successfully!";
-    
-    return result;
 }
 
 QVariantList GameManager::getPlaytimeChartData(const QString &name, int numberOfDays) const

@@ -3,11 +3,6 @@
 #include <QVector>
 #include "game.h"
 
-struct DailyPlaytime {
-        QString date;      // YYYY-MM-DD format
-        qint64 seconds;    // Total seconds played that day
-};
-
 /*
     GameRepository defines HOW GameManager talks to persistence.
 
@@ -36,9 +31,6 @@ public:
     // Get stats
     virtual int getGameSessionCount(const QString &gameName) const = 0;
     virtual qint64 getGameMaxSessionDuration(const QString &gameName) const = 0;
-
-    //TODO: Remove this function
-    virtual QVector<DailyPlaytime> getPast30DaysPlaytime(const QString &gameName) const = 0;
     
     // Game Playtime Chart
     virtual QVariantList getPlaytimeChartData(const QString &gameName, int numberOfDays = 30) const = 0;

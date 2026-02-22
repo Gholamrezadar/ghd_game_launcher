@@ -369,12 +369,24 @@ Item {
                     ctx.fill()
                 }
 
+                // Format duration as "2 h 35 min" or "45 min"
+                var totalMinutes = Math.round(hit.value * 60)
+                var hours        = Math.floor(totalMinutes / 60)
+                var minutes      = totalMinutes % 60
+                var durationText = (hours > 0)
+                    ? hours + " Hr " + minutes + " Min"
+                    : minutes + " Minutes"
+
                 tooltip.x    = _clampTooltipX(hit.cx ?? hit.x)
                 tooltip.y    = (hit.cy ?? hit.y) - tooltip.height - 6
-                tooltip.text = hit.date.toLocaleDateString()
-                             + "  |  "
-                             + hit.value.toFixed(2)
-                             + (root.yUnit ? " " + root.yUnit : "")
+                // Format date as DD/MM/YYYY
+                var d    = hit.date
+                var day  = String(d.getDate()).padStart(2, "0")
+                var mon  = String(d.getMonth() + 1).padStart(2, "0")
+                var year = d.getFullYear()
+                var dateText = day + "/" + mon + "/" + year
+
+                tooltip.text = durationText + " (" + dateText + ")"
                 tooltip.visible = true
             }
 

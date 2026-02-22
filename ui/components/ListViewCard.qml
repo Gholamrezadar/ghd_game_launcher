@@ -188,7 +188,7 @@ Rectangle {
                     }
                 }
 
-                // ── Fake data (replace with your C++ model) ───────────────────────────────
+                // Fake data
                 function generateData(days, maxVal) {
                     var now   = new Date()
                     var arr   = []
@@ -208,19 +208,23 @@ Rectangle {
                     return arr
                 }
 
-                property var dataset60:  generateData(60, 8)
-                property var dataset10:  generateData(11, 5)
-                property var dataset7:   generateData(7,  3)
+                // property var fake_dataset: generateData(7,  3)
+
                 // Playtime Chart
                 GHDChart {
                     id: chart
+                    z:7642384632
 
                     anchors.centerIn: parent
                     anchors.fill: parent
-                    anchors.margins: 32
+                    anchors.leftMargin: 32
+                    anchors.rightMargin: 32
+                    anchors.topMargin: 48
+                    anchors.bottomMargin: 8
 
                     model:    gameManager.getPlaytimeChartData(modelData.name, 11)  // last 14 days
-                    // model: parent.dataset10
+                    // model: parent.fake_dataset
+
                     plotMode: GHDChart.PlotMode.Bar
 
                     title:    ""
@@ -231,7 +235,7 @@ Rectangle {
                     yMax:         0      // auto
                     yTickStep:    0      // auto
                     yDecimals:    1
-                    xTickCount:   parent.dataset10.length-1
+                    xTickCount:   11
                     xTicksInterval: 1      // 1: Drop 1 tick, show 1 tick
                     tickRotation: 30
 
@@ -242,7 +246,6 @@ Rectangle {
                     seriesColor:      "#3B82F6"
                     seriesHoverColor: "#60A5FA"
                 }
-
             }
         }
     }
