@@ -4,7 +4,7 @@ An offline launcher for Games and Applications made with Qt and QML.
 
 ![demo_grid](demos/grid_view_demo.png)
 
-![demo_list](demos/list_view_demo.png)
+![demo_list_chart](demos/list_view_demo_chart.png)
 
 ## Features
 
@@ -12,11 +12,12 @@ An offline launcher for Games and Applications made with Qt and QML.
 - Grid/List view
 - Search
 - Sorting based on Hours Played, Last Played and install date
+- Recent activity chart
 
 ## TODO
 
 - [ ] Auto download covers (couldn't find a reliable source)
-- [ ] Recent activity chart in the list view (in progress)
+- [x] Recent activity chart in the list view (in progress)
 - [ ] Batch game add (read a JSON file?)
 - [ ] Export/Import
 - [ ] Minor glitches (switching between sort modes, etc.)
