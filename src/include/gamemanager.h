@@ -40,8 +40,11 @@ public:
     Q_INVOKABLE int getGameSessionCount(const QString &name) const;
     Q_INVOKABLE qint64 getGameMaxSessionDuration(const QString &name) const;
 
+    //TODO: remove these
     Q_INVOKABLE QVariantList getPast30DaysPlaytime(const QString &name) const;
     Q_INVOKABLE QVariantList getFakePast30DaysPlaytime(const QString &name) const;
+
+    Q_INVOKABLE QVariantList getPlaytimeChartData(const QString &name, int numberOfDays = 30) const;
 
 
     // Getters for properties

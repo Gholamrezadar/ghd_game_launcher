@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts 1.15
 import QtQuick.Effects
+import "../components"
 // import QtGraphs
 
 Rectangle {
@@ -187,7 +188,59 @@ Rectangle {
                     }
                 }
 
-                
+                // ── Fake data (replace with your C++ model) ───────────────────────────────
+                function generateData(days, maxVal) {
+                    var now   = new Date()
+                    var arr   = []
+                    var value = maxVal * 0.4
+
+                    for (var i = days; i >= 0; --i) {
+                        var d = new Date(now)
+                        d.setDate(d.getDate() - i)
+                        d.setHours(0, 0, 0, 0)
+
+                        // random walk
+                        value += (Math.random() - 0.48) * maxVal * 0.15
+                        value  = Math.max(0, Math.min(maxVal, value))
+
+                        arr.push({ timestamp: d, value: parseFloat(value.toFixed(2)) })
+                    }
+                    return arr
+                }
+
+                property var dataset60:  generateData(60, 8)
+                property var dataset30:  generateData(30, 5)
+                property var dataset7:   generateData(7,  3)
+                // Playtime Chart
+                GHDChart {
+                    id: chart
+
+                    anchors.centerIn: parent
+                    anchors.fill: parent
+                    anchors.margins: 32
+
+                    model:    gameManager.getPlaytimeChartData(modelData.name, 14)  // last 14 days
+                    // model: parent.dataset7
+                    plotMode: GHDChart.PlotMode.Bar
+
+                    title:    "Daily Playtime"
+                    yUnit:    "h"
+                    xUnit:    "days ago"
+
+                    yMin:         0
+                    yMax:         0      // auto
+                    yTickStep:    0      // auto
+                    yDecimals:    1
+                    xTickCount:   6
+
+                    lineWidth:    3
+                    dotRadius:    4
+                    barFillRatio: 0.55
+
+                    seriesColor:      "#3B82F6"
+                    seriesHoverColor: "#60A5FA"
+                }
+
                 // GraphsView {
                 //     // anchors.fill: parent
                 //     z:1

@@ -39,7 +39,11 @@ public:
     //     qint64 seconds;    // Total seconds played that day
     // };
 
+    //TODO: Remove this function
     QVector<DailyPlaytime> getPast30DaysPlaytime(const QString &gameName) const override;
+
+    // Game Playtime Chart
+    QVariantList getPlaytimeChartData(const QString &gameName, int numberOfDays = 30) const override;
 
 private:
     QSqlDatabase m_db;

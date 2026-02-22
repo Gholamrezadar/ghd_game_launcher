@@ -253,6 +253,7 @@ qint64 SQLiteRepository::getGameMaxSessionDuration(const QString &gameName) cons
     return 0;
 }
 
+//TODO: Remove this function
 QVector<DailyPlaytime> SQLiteRepository::getPast30DaysPlaytime(const QString &gameName) const
 {
     QVector<DailyPlaytime> result;
@@ -298,5 +299,60 @@ QVector<DailyPlaytime> SQLiteRepository::getPast30DaysPlaytime(const QString &ga
         result.append(entry);
     }
     
+    return result;
+}
+
+QVariantList SQLiteRepository::getPlaytimeChartData(const QString &gameName, int numberOfDays) const
+{
+    QVariantList result;
+    if (numberOfDays <= 0) numberOfDays = 30;  // safeguard
+    
+    // Resolve game_id
+    QSqlQuery gameQuery(m_db);
+    gameQuery.prepare("SELECT id FROM games WHERE name = ?");
+    gameQuery.addBindValue(gameName);
+    if (!gameQuery.exec() || !gameQuery.next()) {
+        qWarning() << "Game not found:" << gameName;
+        return result;
+    }
+    int gameId = gameQuery.value(0).toInt();
+    
+    // Fetch aggregated seconds per day for the requested range
+    QSqlQuery query(m_db);
+    query.prepare(R"(
+        SELECT 
+            date(start_time, 'unixepoch', 'localtime') as play_date,
+            SUM(duration_sec) as total_seconds
+        FROM sessions
+        WHERE game_id = ?
+          AND start_time >= strftime('%s', 'now', '-' || ? || ' days', 'start of day')
+          AND duration_sec IS NOT NULL
+        GROUP BY play_date
+        ORDER BY play_date ASC
+    )");
+    query.addBindValue(gameId);
+    query.addBindValue(numberOfDays);
+    
+    if (!query.exec()) {
+        qCritical() << "Chart data query failed:" << query.lastError().text();
+        return result;
+    }
+    
+    // Map date string → seconds
+    QMap<QString, qint64> byDate;
+    while (query.next())
+        byDate[query.value(0).toString()] = query.value(1).toLongLong();
+    
+    // Fill all days (including zeros), convert to hours for chart
+    QDate today = QDate::currentDate();
+    for (int i = numberOfDays - 1; i >= 0; --i) {
+        QDate d = today.addDays(-i);
+        QDateTime ts(d, QTime(0, 0), Qt::LocalTime);
+        
+        QVariantMap point;
+        point["timestamp"] = ts;
+        point["value"] = byDate.value(d.toString("yyyy-MM-dd"), 0) / 3600.0; // hours
+        result.append(point);
+    }
     return result;
 }

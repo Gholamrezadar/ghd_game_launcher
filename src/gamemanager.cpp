@@ -317,7 +317,7 @@ qint64 GameManager::getGameMaxSessionDuration(const QString &name) const
     return m_repository->getGameMaxSessionDuration(name);
 }
 
-// Add to gamemanager.cpp
+//TODO: remove
 QVariantList GameManager::getPast30DaysPlaytime(const QString &name) const
 {
     QVariantList result;
@@ -354,7 +354,7 @@ QVariantList GameManager::getPast30DaysPlaytime(const QString &name) const
 }
 
 #include <random>
-
+//TODO: remove
 QVariantList GameManager::getFakePast30DaysPlaytime(const QString &name) const
 {
     qInfo() << "Fake data called";
@@ -394,4 +394,9 @@ QVariantList GameManager::getFakePast30DaysPlaytime(const QString &name) const
     qInfo() << "Fake data created successfully!";
     
     return result;
+}
+
+QVariantList GameManager::getPlaytimeChartData(const QString &name, int numberOfDays) const
+{
+    return m_repository->getPlaytimeChartData(name, numberOfDays);
 }

@@ -70,6 +70,7 @@ qt_add_qml_module(GHD_Launcher
         ui/components/SearchBar.qml
         ui/components/GridViewCard.qml
         ui/components/ListViewCard.qml
+        ui/components/GHDChart.qml
 
         # Singletons
         ui/theme/Theme.qml
