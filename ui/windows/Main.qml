@@ -80,7 +80,7 @@ ApplicationWindow {
                 // Card List
                 ListView {
                     boundsBehavior: Flickable.StopAtBounds
-                    model: gameManager.displayGames
+                    model: gameManager?.displayGames
                     clip: true
                     // displayMarginBeginning: 500 // Paint delegates before visible area
                     // displayMarginEnd: 100 // Paint delegates after visible area

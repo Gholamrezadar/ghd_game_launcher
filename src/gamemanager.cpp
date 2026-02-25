@@ -127,6 +127,7 @@ void GameManager::launchGame(const QString &name)
 
     // Notify the ui about the `lastPlayed` change
     emit gamesChanged();
+    qInfo() << "Games Changed (launch)";
 }
 
 // Record a session on game closed
@@ -148,6 +149,18 @@ void GameManager::onSessionEnded(GameSession *session)
 
     // Notify the ui about the `totalPlaytime` and `lastPlayed` changes
     emit gamesChanged();
+    qInfo() << "Games Changed (end)";
+
+    // Hack: force a UI update
+    if(m_sortIndex == 0) {
+        setSortMode(1);
+        setSortMode(0);
+    }
+    else {
+        int tmp = m_sortIndex;
+        setSortMode(0);
+        setSortMode(tmp);
+    }
 }
 
 // Add a new game to the library

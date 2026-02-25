@@ -73,7 +73,7 @@ Item {
     property int  barMinWidth:  2
 
     // Fonts
-    property string fontFamily: "Sans"
+    property string fontFamily: "Arial"
     property int    fontSize:   12
     property int    titleSize:  18
 
@@ -107,6 +107,20 @@ Item {
     onBarMinWidthChanged:     canvas.requestPaint()
     onXTicksIntervalChanged: canvas.requestPaint()
     onTickRotationChanged: canvas.requestPaint()
+
+    Connections {
+        target: gameManager
+        function onGamesChanged() {
+            canvas.requestPaint()
+        }
+    }
+
+    Connections {
+        target: gameManager
+        function onDisplayGamesChanged() {
+            canvas.requestPaint()
+        }
+    }
 
     // ── Helper: draw rotated label ────────────────────────────────
     function drawRotatedLabel(ctx, text, x, y, rotationDeg, align, color, font) {

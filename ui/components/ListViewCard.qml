@@ -222,7 +222,7 @@ Rectangle {
                     anchors.topMargin: 48
                     anchors.bottomMargin: 8
 
-                    model:    gameManager.getPlaytimeChartData(modelData.name, 11)  // last 14 days
+                    model:    gameManager?.getPlaytimeChartData(modelData.name, 11)  // last 14 days
                     // model: parent.fake_dataset
 
                     plotMode: GHDChart.PlotMode.Bar
