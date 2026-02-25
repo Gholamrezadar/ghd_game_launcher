@@ -6,6 +6,7 @@ import "../components"
 import "../theme"
 
 ApplicationWindow {
+    id: window
     title: "GHD Launcher"
     visible: true
     width: 1120
@@ -35,59 +36,42 @@ ApplicationWindow {
                 sourceComponent: gridViewComponent // GridView by default
                 anchors.fill: parent
                 anchors.horizontalCenter: parent.horizontalCenter
-                // anchors.leftMargin: Theme.gridViewPadding
-                // anchors.rightMargin: Theme.gridViewPadding
             }
 
             // 1. Grid View Component
             Component {
                 id: gridViewComponent
 
+                // This wrapper around the gridview is key!
+                // the loader automatically overwrites its components width/height to its own size!
+                // so with a wrapper, the wrapper gets the loaders size not the gridview
+                // otherwise we could not center the gridview (set its width)
+                Rectangle {
+                    color: "transparent"
+
                 // Card Grid
                 GridView {
                     id: gridId
                     boundsBehavior: Flickable.StopAtBounds
                     cellWidth: Theme.gridViewCardWidth
-                    cellHeight: Theme.gridViewCardHeight 
+                    cellHeight: Theme.gridViewCardHeight
+                    clip: true
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    model: gameManager?.displayGames
                     // displayMarginBeginning: 500 // Paint delegates before visible area
                     // displayMarginEnd: 100 // Paint delegates after visible area
-                    anchors.fill: parent
-                    // anchors.margins: 100
 
-                    clip: true
-                    model: gameManager?.displayGames
-
-                    // center children horizontally
-                    property int columns: Math.floor(width / cellWidth)
-                    property real rowWidth: columns * cellWidth
-                    property real horizontalPadding: Math.max(0, (width - rowWidth) / 2)
-                    contentX: horizontalPadding
-                    Binding {
-                        target: gridId
-                        property: "contentX"
-                        value: -gridId.horizontalPadding
-                        when: true
-                    }
-                    Component.onCompleted: {
-                        gridId.contentX = -gridId.horizontalPadding
-                        // print(gridId.horizontalPadding)
-                    }
-                    Connections {
-                        target: gameManager
-                        function onDisplayGamesChanged() {
-                            Qt.callLater(() => {
-                                gridId.forceLayout()
-                                gridId.contentX = -gridId.horizontalPadding
-                            })
-                        }
-                    }
-
-                    
+                    // Centering logic
+                    property int columns: Math.max(1, Math.floor(parent.width / cellWidth))
+                    width: columns * cellWidth
+                    height: parent.height
 
                     // Grid Cell
                     delegate: GridViewCard {}
                 }
             }
+                }
+
 
             // 2. List View Component
             Component {
