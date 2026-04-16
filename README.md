@@ -16,11 +16,20 @@ An offline launcher for Games and Applications made with Qt and QML.
 
 ## TODO
 
+- [ ] Session List View
 - [ ] Auto download covers (couldn't find a reliable source)
-- [x] Recent activity chart in the list view (in progress)
 - [ ] Batch game add (read a JSON file?)
 - [ ] Export/Import
-- [ ] Minor glitches (switching between sort modes, etc.)
+- [x] Minor glitches (switching between sort modes, etc.)
+- [x] Recent activity chart in the list view
+
+## Packing
+To pack the application run the following command
+
+```bash
+this
+```
+
 
 ## Credits
 

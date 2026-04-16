@@ -5,9 +5,14 @@
 #include <QDateTime>
 
 /*
-    GameSession represents ONE running process.
-    Multiple sessions can exist at the same time.
+    GameSession represents a single running instance of a game process.
+    
+    Responsibilities:
+    - Track the lifecycle of a specific game launch (start to end)
+    - Monitor the process to detect if it has terminated
+    - Calculate the duration of the session in seconds
 */
+
 class GameSession : public QObject
 {
     Q_OBJECT
@@ -25,10 +30,7 @@ public:
     qint64 durationSeconds() const;
 
 signals:
-    /*
-        Emitted when the session ends.
-        GameManager listens to this to update stats.
-    */
+    // GameManager listens to this to update stats.
     void sessionEnded(GameSession *session);
 
 private:

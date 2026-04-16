@@ -10,10 +10,19 @@
 #include "gamerepository.h"
 
 /*
-    GameManager owns:
-    - the game library
-    - active sessions
-    - session → game stat updates
+    GameManager acts as the central controller for the application logic.
+    
+    Responsibilities:
+    - Maintain the in-memory list of all games and their current state
+    - Filter and sort the game list for efficient UI rendering
+    - Delegate persistence operations to GameRepository
+    - Manage active game sessions and trigger UI updates via signals
+    - Provide Q_INVOKABLE methods for direct integration with QML
+
+    Architecture Note:
+    This class bridges the gap between the raw data model (Game) and the UI,
+    ensuring that sorting, filtering, and session tracking happen at the logic
+    layer rather than the view layer.
 */
 class GameManager : public QObject
 {

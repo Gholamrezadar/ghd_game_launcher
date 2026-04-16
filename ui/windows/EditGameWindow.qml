@@ -6,6 +6,9 @@ import QtQuick.Dialogs
 import QtQuick.Effects
 import "../components"
 
+
+
+
 ApplicationWindow {
     id: window
     width: 600
@@ -28,6 +31,64 @@ ApplicationWindow {
         nameInput.text  = game.name     ?? ""
         exeInput.text   = game.exePath  ?? ""
         coverInput.text = game.posterUrl ?? ""
+    }
+
+    // Convert 1h20m30s -> seconds
+    function parseDurationToSeconds(durationStr) {
+        if (!durationStr || durationStr.length === 0) {
+            throw new Error("Duration string cannot be empty");
+        }
+
+        let totalSeconds = 0;
+        let currentNumber = 0;
+        let hasUnits = false;
+
+        for (let i = 0; i < durationStr.length; ++i) {
+            let c = durationStr[i];
+
+            if (c >= '0' && c <= '9') {
+                currentNumber = currentNumber * 10 + (c.charCodeAt(0) - '0'.charCodeAt(0));
+            }
+            else if (c === 'h' || c === 'm' || c === 's') {
+                if (currentNumber === 0 && c !== 's') {
+                    // Allow "0s" but not "0h" or "0m" without a number
+                    if (!(i > 0 && durationStr[i-1] >= '0' && durationStr[i-1] <= '9')) {
+                        throw new Error("Missing number before unit: " + durationStr);
+                    }
+                }
+
+                switch (c) {
+                    case 'h': totalSeconds += currentNumber * 3600; break;
+                    case 'm': totalSeconds += currentNumber * 60; break;
+                    case 's': totalSeconds += currentNumber; break;
+                }
+
+                currentNumber = 0;
+                hasUnits = true;
+            }
+            else if (c === ' ' || c === '\t' || c === '\n' || c === '\r') {
+                // Skip whitespace
+                continue;
+            }
+            else {
+                throw new Error("Invalid character in duration string: " + c);
+            }
+        }
+
+        // If no units were found, treat the entire string as seconds
+        if (!hasUnits) {
+            if (currentNumber > 0 || durationStr === "0") {
+                return currentNumber;
+            }
+            throw new Error("Invalid duration format: " + durationStr);
+        }
+
+        // If there was a trailing number without a unit, it's invalid
+        if (currentNumber > 0) {
+            throw new Error("Number without unit at end: " + durationStr);
+        }
+
+        return totalSeconds;
     }
 
     Rectangle {
@@ -146,8 +207,8 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     placeholderText: "0"
                     text: game.totalPlaytimeSec ?? "0"
-                    inputMethodHints: Qt.ImhDigitsOnly
-                    validator: IntValidator { bottom: 0 }
+                    // inputMethodHints: Qt.ImhDigitsOnly
+                    // validator: IntValidator { bottom: 0 }
                     backgroundColor:        "#2c2c2c"
                     backgroundColorFocused: "#333333"
                     textColor:              "#ffffff"
@@ -256,7 +317,18 @@ ApplicationWindow {
                     if (newName  !== originalName) fields["name"] = newName
                     if (newExe   !== game.exePath) fields["executablePath"] = newExe
                     if (newCover !== game.posterUrl) fields["posterUrl"] = newCover
-                    const newPlaytime = parseInt(playtimeInput.text) || 0
+                    // const newPlaytime = parseInt(playtimeInput.text) || 0
+                    let newPlaytime = 0;
+                    try{
+                        newPlaytime = parseDurationToSeconds(playtimeInput.text);
+
+                    } catch(e)
+                    {
+                        console.log(e.message);
+                        errorLabel.text = "Invalid time format (e.g. 1h 30m 20s)";
+                        return
+                    }
+
                     if (newPlaytime !== (game.totalPlaytimeSec ?? 0)) fields["totalPlaytimeSec"] = newPlaytime
 
                     if (Object.keys(fields).length > 0)

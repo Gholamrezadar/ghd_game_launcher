@@ -4,17 +4,18 @@
 #include <QDateTime>
 
 /*
-    Represents a game entry in the launcher.
-
-    This maps almost 1:1 to a future SQLite table.
+    Game represents a single entry in the library.
+    
+    Responsibilities:
+    - Store core metadata (name, executable path, poster URL)
+    - Track aggregate statistics (total playtime, last played timestamp)
+    - Act as the data model passed between the Repository and the Manager
 */
 struct Game
 {
     QString name;
     QString executablePath;
-
-    // Metadata (not all shown yet)
-    QString posterUrl;          // future UI use
+    QString posterUrl;
     QDateTime dateAdded;
 
     // Stats

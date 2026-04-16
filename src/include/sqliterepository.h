@@ -4,13 +4,16 @@
 #include "gamerepository.h"
 
 /*
-    SQLite-backed implementation of GameRepository.
-
+    SQLiteRepository provides the concrete implementation of GameRepository using SQLite.
+    
     Responsibilities:
-    - Open SQLite database
-    - Create tables if missing
-    - Load/save Game objects
-    - Record session start/end and update playtime
+    - Initialize and manage the connection to the local SQLite database file
+    - Automatically create necessary schema tables if they do not exist
+    - Implement the full CRUD (Create, Read, Update, Delete) cycle for Game objects
+    - Execute SQL queries to aggregate session data and generate playtime charts
+    
+    This class is the only component responsible for direct SQL execution,
+    ensuring that the rest of the application deals only with high-level C++/Qt objects.
 */
 class SQLiteRepository : public GameRepository
 {
