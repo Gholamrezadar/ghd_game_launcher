@@ -6,7 +6,7 @@ import "../utils"
 
 Rectangle {
 
-    property bool isHovered: mouseArea.containsMouse || editButton.hovered
+    property bool isHovered: mouseArea.containsMouse || editButton.hovered || sessionsButton.hovered
     width: gridId.cellWidth
     height: gridId.cellHeight
     color: "transparent"
@@ -28,48 +28,81 @@ Rectangle {
             source: modelData.posterUrl.startsWith("file:///")
             ? modelData.posterUrl
             : "file:///" + modelData.posterUrl
-                
+
             fillMode: Image.PreserveAspectCrop
             visible: modelData.posterUrl !== ""
             radius: Theme.gridViewCardRadius
         }
 
-        GHDToolButton {
-            id: editButton
-            toolTipText: "Edit information"
-            iconSource: "qrc:/icons/icon_edit_2.svg"
+        // Top-right action buttons
+        Row {
+            id: actionButtons
             z: 10000
-            opacity: isHovered ? 1 : 0
             anchors.top: parent.top
             anchors.right: parent.right
             anchors.topMargin: 4
             anchors.rightMargin: 4
-            iconColor: Theme.toolButtonIconColor
-            iconColorPressed: Theme.toolButtonPressedColor
-            iconColorHovered: Theme.toolButtonHoveredColor
+            spacing: 2
 
-            onHoveredChanged: {
-                if (hovered) {
-                    card.state = "hovered"
-                } else if (!mouseArea.containsMouse) {
-                    card.state = "default"
+            GHDToolButton {
+                id: sessionsButton
+                toolTipText: "View sessions"
+                iconSource: "qrc:/icons/icon_calendar_2.svg"
+                opacity: isHovered ? 1 : 0
+                iconColor: Theme.toolButtonIconColor
+                iconColorPressed: Theme.toolButtonPressedColor
+                iconColorHovered: Theme.toolButtonHoveredColor
+
+                onHoveredChanged: {
+                    if (hovered) {
+                        card.state = "hovered"
+                    } else if (!mouseArea.containsMouse && !editButton.hovered) {
+                        card.state = "default"
+                    }
+                }
+
+                onClicked: {
+                    gameManager.setCurrentGame(modelData.name)
+                    var component = Qt.createComponent("../windows/SessionsListWindow.qml")
+                    if (component.status === Component.Ready) {
+                        var win = component.createObject(null, { visible: true })
+                        win.show()
+                    }
                 }
             }
 
-            onClicked: {
-                print("Editing", modelData.name)
-                var component = Qt.createComponent("../windows/EditGameWindow.qml")
-                if (component.status === Component.Ready) {
-                    var win = component.createObject(null, {
-                        visible: true,
-                        game: {
-                            name:             modelData.name,
-                            exePath:          modelData.executablePath,
-                            posterUrl:        modelData.posterUrl,
-                            totalPlaytimeSec: modelData.totalPlaytimeSec
-                        }
-                    })
-                    win.show()
+            GHDToolButton {
+                id: editButton
+                toolTipText: "Edit information"
+                iconSource: "qrc:/icons/icon_edit_2.svg"
+                opacity: isHovered ? 1 : 0
+                iconColor: Theme.toolButtonIconColor
+                iconColorPressed: Theme.toolButtonPressedColor
+                iconColorHovered: Theme.toolButtonHoveredColor
+
+                onHoveredChanged: {
+                    if (hovered) {
+                        card.state = "hovered"
+                    } else if (!mouseArea.containsMouse && !sessionsButton.hovered) {
+                        card.state = "default"
+                    }
+                }
+
+                onClicked: {
+                    print("Editing", modelData.name)
+                    var component = Qt.createComponent("../windows/EditGameWindow.qml")
+                    if (component.status === Component.Ready) {
+                        var win = component.createObject(null, {
+                            visible: true,
+                            game: {
+                                name:             modelData.name,
+                                exePath:          modelData.executablePath,
+                                posterUrl:        modelData.posterUrl,
+                                totalPlaytimeSec: modelData.totalPlaytimeSec
+                            }
+                        })
+                        win.show()
+                    }
                 }
             }
         }
@@ -151,8 +184,8 @@ Rectangle {
 
             onEntered: card.state = "hovered"
             onExited: {
-                // Only exit hover state if we're not hovering the edit button
-                if (!editButton.hovered) {
+                // Only exit hover state if neither action button is hovered
+                if (!editButton.hovered && !sessionsButton.hovered) {
                     card.state = "default"
                 }
             }
@@ -183,6 +216,10 @@ Rectangle {
                     target: editButton
                     opacity: 0.0
                 }
+                PropertyChanges {
+                    target: sessionsButton
+                    opacity: 0.0
+                }
             },
             State {
                 name: "hovered"
@@ -196,6 +233,10 @@ Rectangle {
                 }
                 PropertyChanges {
                     target: editButton
+                    opacity: 1.0
+                }
+                PropertyChanges {
+                    target: sessionsButton
                     opacity: 1.0
                 }
             },

@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
     engine.loadFromModule("ghd_game_launcher", "Main");
     // engine.loadFromModule("ghd_game_launcher", "Testing");
 
+    // gameManager.setCurrentGame("Resident Evil 2");
+
     if (engine.rootObjects().isEmpty())
         return -1;
 

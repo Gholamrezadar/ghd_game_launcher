@@ -307,3 +307,79 @@ QVariantList SQLiteRepository::getPlaytimeChartData(const QString &gameName, int
     }
     return result;
 }
+
+QVariantList SQLiteRepository::getSessions(const QString &gameName) const {
+    QVariantList sessions;
+
+    // Resolve game_id
+    QSqlQuery gameQuery(m_db);
+    gameQuery.prepare("SELECT id FROM games WHERE name = ?");
+    gameQuery.addBindValue(gameName);
+
+    if (!gameQuery.exec() || !gameQuery.next()) {
+        qWarning() << "Game not found for getSessions:" << gameName;
+        return sessions;
+    }
+
+    int gameId = gameQuery.value(0).toInt();
+
+    // Fetch all sessions for this game, ordered by start time (newest first)
+    QSqlQuery query(m_db);
+    query.prepare(R"(
+        SELECT id, start_time, end_time, duration_sec
+        FROM sessions
+        WHERE game_id = ?
+        ORDER BY start_time DESC
+    )");
+    query.addBindValue(gameId);
+
+    if (!query.exec()) {
+        qCritical() << "Failed to get sessions for game:" << gameName << query.lastError().text();
+        return sessions;
+    }
+
+    while (query.next()) {
+        QVariantMap session;
+
+        int sessionId = query.value(0).toInt();
+        qint64 startTimeSec = query.value(1).toLongLong();
+        qint64 endTimeSec = query.value(2).toLongLong();
+        qint64 durationSec = query.value(3).toLongLong();
+
+        // Convert timestamps to QDateTime for easier use in QML/UI
+        QDateTime startDateTime = QDateTime::fromSecsSinceEpoch(startTimeSec, Qt::LocalTime);
+        QDateTime endDateTime = endTimeSec > 0 ? QDateTime::fromSecsSinceEpoch(endTimeSec, Qt::LocalTime) : QDateTime();
+
+        session["id"] = sessionId;
+        session["gameName"] = gameName;
+        session["startTime"] = startDateTime;
+        session["startTimeSec"] = startTimeSec;
+        session["endTime"] = endDateTime;
+        session["endTimeSec"] = endTimeSec;
+        session["durationSec"] = durationSec;
+        session["durationHours"] = durationSec / 3600.0;
+        session["durationMinutes"] = durationSec / 60.0;
+
+        // Format duration as human-readable string (HH:MM:SS)
+        int hours = durationSec / 3600;
+        int minutes = (durationSec % 3600) / 60;
+        int seconds = durationSec % 60;
+        session["durationFormatted"] = QString("%1:%2:%3").arg(hours, 2, 10, QChar('0')).arg(minutes, 2, 10, QChar('0')).arg(seconds, 2, 10, QChar('0'));
+
+        // Check if session is ongoing (no end time)
+        session["isOngoing"] = (endTimeSec == 0);
+
+        sessions.append(session);
+    }
+
+    qDebug() << "Retrieved" << sessions.size() << "sessions for game:" << gameName;
+    for (auto sess : sessions) {
+        qDebug() << sess.toMap()["id"];
+        qDebug() << sess.toMap()["gameName"];
+        qDebug() << sess.toMap()["startTime"];
+        qDebug() << sess.toMap()["durationSec"];
+    }
+    qDebug() << "Retrieved" << sessions.size() << "sessions for game:" << gameName;
+
+    return sessions;
+}

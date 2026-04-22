@@ -80,6 +80,14 @@ QVariantList GameManager::displayGames() const
 
 }
 
+QString GameManager::currentGame() const {
+    return m_currentGame;
+}
+
+QVariantList GameManager::currentGameSessions() const {
+    return m_currentGameSessions;
+}
+
 int GameManager::sortMode() const {
     return m_sortIndex;
 }
@@ -333,4 +341,42 @@ qint64 GameManager::getGameMaxSessionDuration(const QString &name) const
 QVariantList GameManager::getPlaytimeChartData(const QString &name, int numberOfDays) const
 {
     return m_repository->getPlaytimeChartData(name, numberOfDays);
+}
+
+QVariantList GameManager::getGameSessions(const QString &name) const {
+    if (!m_repository) {
+        qWarning() << "GameManager::getGameSessions - Repository is null";
+        return QVariantList();
+    }
+
+    // Find the game in the list to verify it exists
+    bool gameExists = false;
+    for (const Game &game : m_games) {
+        if (game.name == name) {
+            gameExists = true;
+            break;
+        }
+    }
+
+    if (!gameExists || name == "") {
+        qWarning() << "GameManager::getGameSessions - Game not found:" << name;
+        return QVariantList();
+    }
+
+    // Delegate to the repository to get sessions
+    QVariantList sessions = m_repository->getSessions(name);
+
+    qDebug() << "GameManager::getGameSessions - Retrieved" << sessions.size() << "sessions for game:" << name;
+
+    return sessions;
+}
+
+void GameManager::setCurrentGame(const QString &name) {
+    // Update currentGame
+    m_currentGame = name;
+    emit currentGameChanged();
+
+    // Also update currentGameSessions
+    m_currentGameSessions = getGameSessions(m_currentGame);
+    emit currentGameSessionsChanged();
 }

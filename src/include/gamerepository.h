@@ -35,7 +35,10 @@ public:
     // Get stats
     virtual int getGameSessionCount(const QString &gameName) const = 0;
     virtual qint64 getGameMaxSessionDuration(const QString &gameName) const = 0;
-    
+
+    // Sessions
+    virtual QVariantList getSessions(const QString &gameName) const = 0;
+
     // Game Playtime Chart
     virtual QVariantList getPlaytimeChartData(const QString &gameName, int numberOfDays = 30) const = 0;
 };

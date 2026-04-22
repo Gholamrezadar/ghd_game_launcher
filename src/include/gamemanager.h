@@ -32,6 +32,8 @@ class GameManager : public QObject
     Q_PROPERTY(QVariantList games READ games NOTIFY gamesChanged)
     Q_PROPERTY(QVariantList displayGames READ displayGames NOTIFY displayGamesChanged)
     Q_PROPERTY(int sortMode READ sortMode WRITE setSortMode NOTIFY sortModeChanged)
+    Q_PROPERTY(QString currentGame READ currentGame WRITE setCurrentGame NOTIFY currentGameChanged)
+    Q_PROPERTY(QVariantList currentGameSessions READ currentGameSessions NOTIFY currentGameSessionsChanged)
 
 public:
     explicit GameManager(GameRepository *repository, QObject *parent = nullptr);
@@ -46,15 +48,19 @@ public:
     Q_INVOKABLE void setAscending(bool isAscending);
     Q_INVOKABLE void setFilterText(const QString &filterText);
 
-    Q_INVOKABLE int getGameSessionCount(const QString &name) const;
-    Q_INVOKABLE qint64 getGameMaxSessionDuration(const QString &name) const;
-
     Q_INVOKABLE QVariantList getPlaytimeChartData(const QString &name, int numberOfDays = 30) const;
 
+    Q_INVOKABLE int getGameSessionCount(const QString &name) const;
+    Q_INVOKABLE qint64 getGameMaxSessionDuration(const QString &name) const;
+    Q_INVOKABLE QVariantList getGameSessions(const QString &name) const;
+
+    Q_INVOKABLE void setCurrentGame(const QString &name);
 
     // Getters for properties
     QVariantList games() const;
     QVariantList displayGames() const;
+    QString currentGame() const;
+    QVariantList currentGameSessions() const;
     int sortMode() const;
 
 signals:
@@ -65,9 +71,14 @@ signals:
     void ascendingChanged();
     void filterTextChanged();
 
+    void currentGameChanged();
+    void currentGameSessionsChanged();
+
 private:
     QVector<Game> m_games;
     QVector<Game> m_displayGames; // A proxy model for m_games that is filtered and sorted for the ui to display
+    QString m_currentGame;
+    QVariantList m_currentGameSessions;
 
     int m_sortIndex = 1;
     bool m_isAscending = true;

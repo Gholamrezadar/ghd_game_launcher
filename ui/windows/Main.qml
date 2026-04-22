@@ -30,6 +30,15 @@ ApplicationWindow {
             Layout.preferredHeight: 1
             color: "transparent"
 
+            // Empty state message shown when there are no games
+            Text {
+                anchors.centerIn: parent
+                text: "Press the + Button to Add a Game"
+                color: "gray"
+                font.pixelSize: 14
+                visible: !gameManager?.displayGames?.count
+            }
+
             // Switch between GridView and ListView
             Loader {
                 id: viewLoader
@@ -49,29 +58,26 @@ ApplicationWindow {
                 Rectangle {
                     color: "transparent"
 
-                // Card Grid
-                GridView {
-                    id: gridId
-                    boundsBehavior: Flickable.StopAtBounds
-                    cellWidth: Theme.gridViewCardWidth
-                    cellHeight: Theme.gridViewCardHeight
-                    clip: true
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    model: gameManager?.displayGames
-                    // displayMarginBeginning: 500 // Paint delegates before visible area
-                    // displayMarginEnd: 100 // Paint delegates after visible area
+                    // Card Grid
+                    GridView {
+                        id: gridId
+                        boundsBehavior: Flickable.StopAtBounds
+                        cellWidth: Theme.gridViewCardWidth
+                        cellHeight: Theme.gridViewCardHeight
+                        clip: true
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        model: gameManager?.displayGames
 
-                    // Centering logic
-                    property int columns: Math.max(1, Math.floor(parent.width / cellWidth))
-                    width: columns * cellWidth
-                    height: parent.height
+                        // Centering logic
+                        property int columns: Math.max(1, Math.floor(parent.width / cellWidth))
+                        width: columns * cellWidth
+                        height: parent.height
 
-                    // Grid Cell
-                    delegate: GridViewCard {}
+                        // Grid Cell
+                        delegate: GridViewCard {}
+                    }
                 }
             }
-                }
-
 
             // 2. List View Component
             Component {
@@ -82,11 +88,6 @@ ApplicationWindow {
                     boundsBehavior: Flickable.StopAtBounds
                     model: gameManager?.displayGames
                     clip: true
-                    // displayMarginBeginning: 500 // Paint delegates before visible area
-                    // displayMarginEnd: 100 // Paint delegates after visible area
-                    // anchors.leftMargin: 30
-
-
 
                     // List View Delegate
                     delegate: ListViewCard {}

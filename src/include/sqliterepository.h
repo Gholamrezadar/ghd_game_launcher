@@ -37,6 +37,9 @@ public:
     int getGameSessionCount(const QString &gameName) const override;
     qint64 getGameMaxSessionDuration(const QString &gameName) const override;
 
+    // Get sessions
+    QVariantList getSessions(const QString &gameName) const override;
+
     // Game Playtime Chart
     QVariantList getPlaytimeChartData(const QString &gameName, int numberOfDays = 30) const override;
 

@@ -61,6 +61,7 @@ qt_add_qml_module(GHD_Launcher
         ui/windows/Testing.qml
         ui/windows/AddGameWindow.qml
         ui/windows/EditGameWindow.qml
+        ui/windows/SessionsListWindow.qml
 
         # Components
         ui/components/RoundedImage.qml
@@ -71,6 +72,7 @@ qt_add_qml_module(GHD_Launcher
         ui/components/GridViewCard.qml
         ui/components/ListViewCard.qml
         ui/components/GHDChart.qml
+        ui/components/SessionCard.qml
 
         # Singletons
         ui/theme/Theme.qml
