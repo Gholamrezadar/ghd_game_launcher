@@ -36,7 +36,7 @@ ApplicationWindow {
                 text: "Press the + Button to Add a Game"
                 color: "gray"
                 font.pixelSize: 14
-                visible: !gameManager?.displayGames?.count
+                visible: (gameManager?.displayGames?.length ?? 1) < 1
             }
 
             // Switch between GridView and ListView

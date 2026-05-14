@@ -50,7 +50,7 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-                text: isOngoing ? "Ongoing" : formatDuration(durationSeconds)
+                text: isOngoing ? "Didn't Close Properly!" : formatDuration(durationSeconds)
                 color: "white"
                 font.pixelSize: 13
                 // font.bold: true
