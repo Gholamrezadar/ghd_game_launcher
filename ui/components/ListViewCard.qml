@@ -24,7 +24,8 @@ Rectangle {
         border.width: Theme.searchBarBorderWidth
         state: "default"
 
-        property bool isHovered: cardMouseArea.containsMouse || editButton.hovered || coverImageMouseArea.containsMouse
+        // property bool isHovered: cardMouseArea.containsMouse || editButton.hovered || coverImageMouseArea.containsMouse
+        property bool isHovered: coverImageMouseArea.containsMouse
 
         Row {
             anchors.fill: parent
@@ -123,6 +124,30 @@ Rectangle {
                     }
                 }
 
+                // Sessions Button
+                GHDToolButton {
+                    id: sessionsButton
+                    toolTipText: "View sessions"
+                    iconSource: "qrc:/icons/icon_calendar_2.svg"
+                    z: 10000
+                    anchors.top: parent.top
+                    anchors.right: editButton.right
+                    anchors.topMargin: Theme.listViewInfoboxPadding
+                    anchors.rightMargin: Theme.listViewInfoboxPadding + Theme.listViewCardRadius + 8
+                    iconColor: Theme.toolButtonIconColor
+                    iconColorPressed: Theme.toolButtonPressedColor
+                    iconColorHovered: Theme.toolButtonHoveredColor
+
+                    onClicked: {
+                        gameManager.setCurrentGame(modelData.name)
+                        var component = Qt.createComponent("../windows/SessionsListWindow.qml")
+                        if (component.status === Component.Ready) {
+                            var win = component.createObject(null, { visible: true })
+                            win.show()
+                        }
+                    }
+                }
+
                 // Game Title and subtitle
                 Column {
                     z: 10000
@@ -178,15 +203,6 @@ Rectangle {
                     hoverEnabled: true
                     propagateComposedEvents: true
                     z: 55
-
-                    onEntered: card.state = "hovered"
-                    onExited: card.state = "default"
-                    cursorShape: "PointingHandCursor"
-
-                    onClicked: {
-                        console.log("Clicked row:", modelData.name);
-                        gameManager.launchGame(modelData.name);
-                    }
                 }
 
                 // Fake data
@@ -251,10 +267,8 @@ Rectangle {
                     seriesHoverColor: "#60A5FA"
 
                     Component.onCompleted: function(){
-                        console.log(gameManager?.getPlaytimeChartDataFullHistory(modelData.name));
+                        // console.log(gameManager?.getPlaytimeChartDataFullHistory(modelData.name));
                     }
-
-                    
                 }
             }
         }
