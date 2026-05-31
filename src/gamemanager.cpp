@@ -343,6 +343,10 @@ QVariantList GameManager::getPlaytimeChartData(const QString &name, int numberOf
     return m_repository->getPlaytimeChartData(name, numberOfDays);
 }
 
+QVariantList GameManager::getPlaytimeChartDataFullHistory(const QString &name) const {
+    return m_repository->getPlaytimeChartDataFullHistory(name);
+}
+
 QVariantList GameManager::getGameSessions(const QString &name) const {
     if (!m_repository) {
         qWarning() << "GameManager::getGameSessions - Repository is null";

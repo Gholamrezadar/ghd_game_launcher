@@ -49,6 +49,7 @@ public:
     Q_INVOKABLE void setFilterText(const QString &filterText);
 
     Q_INVOKABLE QVariantList getPlaytimeChartData(const QString &name, int numberOfDays = 30) const;
+    Q_INVOKABLE QVariantList getPlaytimeChartDataFullHistory(const QString &name) const;
 
     Q_INVOKABLE int getGameSessionCount(const QString &name) const;
     Q_INVOKABLE qint64 getGameMaxSessionDuration(const QString &name) const;

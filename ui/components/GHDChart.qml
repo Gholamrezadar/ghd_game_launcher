@@ -74,6 +74,7 @@ Item {
     property int  dotRadius:    4
     property real barFillRatio: 0.6          // 0..1, fraction of slot used by bar
     property int  barMinWidth:  2
+    property real barMaxWidth: 32   // cap in pixels; 0 = no cap
 
     // Fonts
     property string fontFamily: "Arial"
@@ -294,7 +295,8 @@ Item {
 
             if (root.plotMode === GHDChart.PlotMode.Bar) {
                 var slotW = pts.length > 1 ? cW / (pts.length - 1) : cW
-                var bW    = Math.max(root.barMinWidth, slotW * root.barFillRatio)
+                var bW = Math.max(root.barMinWidth, slotW * root.barFillRatio)
+                if (root.barMaxWidth > 0) bW = Math.min(bW, root.barMaxWidth)
 
                 for (let i = 0; i < pts.length; ++i) {
                     var bcx = mapX(pts[i].x.getTime())

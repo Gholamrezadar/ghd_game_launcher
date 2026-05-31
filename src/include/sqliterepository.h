@@ -42,6 +42,7 @@ public:
 
     // Game Playtime Chart
     QVariantList getPlaytimeChartData(const QString &gameName, int numberOfDays = 30) const override;
+    QVariantList getPlaytimeChartDataFullHistory(const QString &gameName) const override;
 
 private:
     QSqlDatabase m_db;

@@ -41,4 +41,5 @@ public:
 
     // Game Playtime Chart
     virtual QVariantList getPlaytimeChartData(const QString &gameName, int numberOfDays = 30) const = 0;
+    virtual QVariantList getPlaytimeChartDataFullHistory(const QString &gameName) const = 0;
 };

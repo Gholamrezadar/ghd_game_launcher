@@ -308,6 +308,71 @@ QVariantList SQLiteRepository::getPlaytimeChartData(const QString &gameName, int
     return result;
 }
 
+QVariantList SQLiteRepository::getPlaytimeChartDataFullHistory(const QString &gameName) const {
+    QVariantList result;
+
+    // Resolve game_id
+    QSqlQuery gameQuery(m_db);
+    gameQuery.prepare("SELECT id FROM games WHERE name = ?");
+    gameQuery.addBindValue(gameName);
+    if (!gameQuery.exec() || !gameQuery.next()) {
+        qWarning() << "Game not found:" << gameName;
+        return result;
+    }
+    int gameId = gameQuery.value(0).toInt();
+
+    // Fetch aggregated seconds per day for all time
+    QSqlQuery query(m_db);
+    query.prepare(R"(
+        SELECT
+            date(start_time, 'unixepoch', 'localtime') as play_date,
+            SUM(duration_sec) as total_seconds
+        FROM sessions
+        WHERE game_id = ?
+          AND duration_sec IS NOT NULL
+        GROUP BY play_date
+        ORDER BY play_date ASC
+    )");
+    query.addBindValue(gameId);
+
+    if (!query.exec()) {
+        qCritical() << "Full history chart query failed:" << query.lastError().text();
+        return result;
+    }
+
+    // Map date string -> seconds
+    QMap<QString, qint64> byDate;
+    QDate firstDate, lastDate;
+    bool hasData = false;
+
+    while (query.next()) {
+        QString dateStr = query.value(0).toString();
+        byDate[dateStr] = query.value(1).toLongLong();
+
+        QDate d = QDate::fromString(dateStr, "yyyy-MM-dd");
+        if (!hasData || d < firstDate)
+            firstDate = d;
+        if (!hasData || d > lastDate)
+            lastDate = d;
+        hasData = true;
+    }
+
+    if (!hasData)
+        return result;
+
+    // Fill every day from first session to today, including zeros
+    for (QDate d = firstDate; d <= lastDate; d = d.addDays(1)) {
+        QDateTime ts(d, QTime(0, 0), Qt::LocalTime);
+
+        QVariantMap point;
+        point["timestamp"] = ts;
+        point["value"] = byDate.value(d.toString("yyyy-MM-dd"), 0) / 3600.0;
+        result.append(point);
+    }
+
+    return result;
+}
+
 QVariantList SQLiteRepository::getSessions(const QString &gameName) const {
     QVariantList sessions;
 
