@@ -8,6 +8,7 @@ Rectangle {
     width: ListView.view.width
     height: Theme.listViewCardHeight + Theme.listViewCardBottomMargin + Theme.listViewCardTopMargin - 6
     color: "transparent"
+    property bool showFullHistory: false
 
     Rectangle {
         id: card
@@ -209,11 +210,46 @@ Rectangle {
                 }
 
                 // property var fake_dataset: generateData(7,  3)
-
                 // Playtime Chart
+                // GHDChart {
+                //     id: chart
+                //     z:7642384632
+
+                //     anchors.centerIn: parent
+                //     anchors.fill: parent
+                //     anchors.leftMargin: 32
+                //     anchors.rightMargin: 32
+                //     anchors.topMargin: 48
+                //     anchors.bottomMargin: 8
+
+                //     model:    gameManager?.getPlaytimeChartData(modelData.name, 90)  // last 14 days
+                //     // model: parent.fake_dataset
+
+                //     plotMode: GHDChart.PlotMode.Bar
+
+                //     title:    ""
+                //     yUnit:    "h"
+                //     xUnit:    "days ago"
+
+                //     yMin:         0
+                //     yMax:         0      // auto
+                //     yTickStep:    0      // auto
+                //     yDecimals:    1
+                //     xTickCount:   90
+                //     xTicksInterval: 1      // 1: Drop 1 tick, show 1 tick
+                //     tickRotation: 30
+
+                //     lineWidth:    3
+                //     dotRadius:    4
+                //     barFillRatio: 0.55
+
+                //     seriesColor:      "#3B82F6"
+                //     seriesHoverColor: "#60A5FA"
+                // }
+
                 GHDChart {
                     id: chart
-                    z:7642384632
+                    z: 7642384632
 
                     anchors.centerIn: parent
                     anchors.fill: parent
@@ -222,8 +258,10 @@ Rectangle {
                     anchors.topMargin: 48
                     anchors.bottomMargin: 8
 
-                    model:    gameManager?.getPlaytimeChartData(modelData.name, 11)  // last 14 days
-                    // model: parent.fake_dataset
+                    // Switch dataset based on mode
+                    model: showFullHistory
+                        ? gameManager?.getPlaytimeChartDataFullHistory(modelData.name)
+                        : gameManager?.getPlaytimeChartData(modelData.name, 90)
 
                     plotMode: GHDChart.PlotMode.Bar
 
@@ -231,13 +269,16 @@ Rectangle {
                     yUnit:    "h"
                     xUnit:    "days ago"
 
-                    yMin:         0
-                    yMax:         0      // auto
-                    yTickStep:    0      // auto
-                    yDecimals:    1
-                    xTickCount:   11
-                    xTicksInterval: 1      // 1: Drop 1 tick, show 1 tick
-                    tickRotation: 30
+                    yMin:       0
+                    yMax:       0
+                    yTickStep:  0
+                    yDecimals:  1
+
+                    // In full history mode, show a date per month-ish; in short mode, every 2nd of 11
+                    xTickCount:     showFullHistory ? 0  : 90
+                    xTicksInterval: showFullHistory ? 6  : 10   // ~weekly spacing in full history
+                    xLabelFormat:   showFullHistory ? "date" : "days"
+                    tickRotation:   showFullHistory ? 45 : 30
 
                     lineWidth:    3
                     dotRadius:    4

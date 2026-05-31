@@ -47,6 +47,9 @@ Item {
     property int xTicksInterval: 0
     // X axis label rotation in degrees (0 = horizontal, -45 = tilted up-left)
     property real tickRotation: 0
+    // X axis label format hint: "days" (default) or "date"
+    // Use "date" when the range spans many weeks / full history
+    property string xLabelFormat: "days"
 
     // Margins
     property int marginLeft:    70
@@ -234,10 +237,18 @@ Item {
 
                     // Label
                     ctx.fillStyle = root.tickLabelColor
-                    var xLabel = (daysFromEnd === 0) ? "Today"
-                                : (spanDay <= 1) ? daysFromEnd + "h ago"
-                                : daysFromEnd + " " + root.xUnit
+                    var xLabel
+                    if (root.xLabelFormat === "date") {
+                        var d = new Date(tMs)
+                        xLabel = (daysFromEnd === 0) ? "Today"
+                               : d.toLocaleDateString(Qt.locale(), "MMM d")
+                    } else {
+                        xLabel = (daysFromEnd === 0) ? "Today"
+                               : (spanDay <= 1) ? daysFromEnd + "h ago"
+                               : daysFromEnd + " " + root.xUnit
+                    }
                     ctx.fillText(xLabel, tx, baseY + root.fontSize + 6)
+
                 }
             } else {
                 // Fallback: original time-based spacing via xTickCount
@@ -255,9 +266,16 @@ Item {
                     ctx.stroke()
 
                     ctx.fillStyle = root.tickLabelColor
-                    var xLabel = (daysFromEnd === 0) ? "Today"
-                                : (spanDay <= 1) ? daysFromEnd + "h ago"
-                                : daysFromEnd + " " + root.xUnit
+                    var xLabel
+                    if (root.xLabelFormat === "date") {
+                        var d = new Date(tMs)
+                        xLabel = (daysFromEnd === 0) ? "Today"
+                               : d.toLocaleDateString(Qt.locale(), "MMM d")
+                    } else {
+                        xLabel = (daysFromEnd === 0) ? "Today"
+                               : (spanDay <= 1) ? daysFromEnd + "h ago"
+                               : daysFromEnd + " " + root.xUnit
+                    }
                     ctx.fillText(xLabel, tx, baseY + root.fontSize + 6)
                 }
             }
