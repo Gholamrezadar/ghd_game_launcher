@@ -206,11 +206,11 @@ Rectangle {
                 name: "default"
                 PropertyChanges {
                     target: overlay
-                    opacity: 0.0
+                    opacity: 0.8
                 }
                 PropertyChanges {
                     target: gameInfo
-                    opacity: 0.0
+                    opacity: 1.0
                 }
                 PropertyChanges {
                     target: editButton
