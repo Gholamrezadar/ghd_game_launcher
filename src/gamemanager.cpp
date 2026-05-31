@@ -142,7 +142,7 @@ void GameManager::launchGame(const QString &name)
 // see GameManager::launchGame for connection to the GameSession::sessionEnded signal
 void GameManager::onSessionEnded(GameSession *session)
 {
-    Game game = m_games[session->gameId()];
+    Game& game = m_games[session->gameId()];
 
     // Update in-memory stats for UI only
     game.totalPlaytimeSec += session->durationSeconds();
